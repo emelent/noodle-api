@@ -6,3 +6,4 @@ Homestead.yaml
 database/*.sqlite
 
 tests/_output/*
+tests/_support/_generated/
