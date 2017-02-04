@@ -19,4 +19,8 @@ before_script:
 # Test
 test:
   script:
-  - php vendor/bin/codecept run
+  - echo testing
+  - ls 
+  - ls vendor
+  - ls vendor/bin
+  - vendor/bin/codecept run
