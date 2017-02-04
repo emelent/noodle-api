@@ -13,6 +13,7 @@ before_script:
 - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 # Install all project dependencies
 - composer install
+- composer require "codeception/codeception:*"
 # Run webserver
 - php -S localhost:3000 --docroot public &>/dev/null&
 
