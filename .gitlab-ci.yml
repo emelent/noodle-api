@@ -20,8 +20,4 @@ before_script:
 # Test
 test:
   script:
-  - echo testing
-  - ls 
-  - ls vendor
-  - ls vendor/bin
   - vendor/bin/codecept run
