@@ -48,7 +48,7 @@ return [
 
         'testing' => [
             'driver'   => 'sqlite',
-            'database' => env('TESTING_DB_DATABASE', base_path('database/database.sqlite')),
+            'database' => env('TESTING_DB_DATABASE', base_path('database/testing.sqlite')),
             'prefix'   => env('TESTING_DB_PREFIX', ''),
         ],
 
