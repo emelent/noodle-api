@@ -5,4 +5,7 @@ $I->sendPOST('users/', ['email' => 'angela@moss.com', 'password' => 'string-bean
 $I->seeResponseCodeIs(\Codeception\Util\HttpCode::CREATED); // 200
 $I->sendGET('users/');
 
-$I->seeResponseMatchesJsonType(['email' => 'string', 'id' => 'integer'], '$.data[0]');
+$I->seeResponseMatchesJsonType([
+  'email' => 'string', 
+  'id' => 'integer'
+  ], '$.data[*]');
