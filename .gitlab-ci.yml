@@ -14,6 +14,11 @@ before_script:
 # Install all project dependencies
 - composer install
 - composer require "codeception/codeception:*"
+
+# Run migrations
+- php artisan migrate:refresh
+- php artisan migrate:refresh --database=testing
+
 # Run webserver
 - php -S localhost:3000 --docroot public &>/dev/null&
 
