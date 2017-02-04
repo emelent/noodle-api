@@ -1,6 +1,8 @@
 <?php
 
-abstract class TestCase extends Laravel\Lumen\Testing\TestCase
+use Lukasoppermann\Httpstatus\Httpstatuscodes;
+
+abstract class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
     /**
      * Creates the application.
