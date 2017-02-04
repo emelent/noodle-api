@@ -6,4 +6,6 @@ class_name: UnitTester
 modules:
     enabled:
         - Asserts
+        - Lumen:
+            part: ORM
         - \Helper\Unit
