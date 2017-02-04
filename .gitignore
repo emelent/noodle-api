@@ -3,6 +3,6 @@
 Homestead.json
 Homestead.yaml
 .env
-database/database.sqlite
+database/*.sqlite
 
 tests/_output/*
