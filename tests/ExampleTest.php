@@ -2,6 +2,7 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
+use App\User;
 
 class ExampleTest extends TestCase
 {
@@ -18,5 +19,12 @@ class ExampleTest extends TestCase
     $this->assertEquals(
         $this->app->version(), $this->response->getContent()
     );
+
+		$user = User::create([
+      'email' => 'dummy@gmail.com',
+      'password'=> 'dummy'
+    ]);
+
+    $this->seeInDatabase('users', ['email' => $user->email]);
   }
 }
