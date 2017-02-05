@@ -29,4 +29,22 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password', 'created_at', 'updated_at'
     ];
+
+    public function modules(){
+      return $this->belongsToMany(
+        'Module', 
+        'user_modules', 
+        'user_id',
+        'module_id'
+      );
+    }
+
+    public function timetables(){
+      return $this->belongsToMany(
+        'Timetable', 
+        'user_modules', 
+        'user_id',
+        'timetable_id'
+      );
+    }
 }
