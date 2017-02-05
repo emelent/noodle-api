@@ -1,6 +1,6 @@
 # Select image from https://hub.docker.com/_/php/
-image: smashmint/docker-gitlab-ci-runner-php7.1
-
+#image: smashmint/docker-gitlab-ci-runner-php7.1
+docker pull sameersbn/gitlab-ci-runner:latest
 # Select what we should cache
 cache:
   paths:
