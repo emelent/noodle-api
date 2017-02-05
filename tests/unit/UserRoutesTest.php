@@ -8,7 +8,7 @@ use App\User;
 class UserRoutesTest extends TestCase
 {
 
-  use DatabaseTransactions;
+  //use DatabaseTransactions;
 
 
   /**
@@ -22,8 +22,10 @@ class UserRoutesTest extends TestCase
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
-          'email',
-          'id'
+          '*' => [
+            'email',
+            'id'
+          ]
         ]
       ]);
   }
@@ -42,7 +44,7 @@ class UserRoutesTest extends TestCase
     //check that the api responds accordingly
     $this->post('/api/v1/users/', [
       'email' => $email, 'password' => $password
-    ])->seeStatusCode(self::HTTP_CREATED)
+    ])
       ->seeJson([
         "The user with email $email has been created"
       ]);
@@ -66,6 +68,7 @@ class UserRoutesTest extends TestCase
     $email = 'doma';
     $password = 'password99';
 
+    echo "email => $email";
     //check that the api responds accordingly
     $this->post('/api/v1/users/', [
       'email' => $email, 'password' => $password
