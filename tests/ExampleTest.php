@@ -6,6 +6,9 @@ use App\User;
 
 class ExampleTest extends TestCase
 {
+
+  use DatabaseTransactions;
+
   /**
    * A basic test example.
    *
@@ -19,12 +22,22 @@ class ExampleTest extends TestCase
     $this->assertEquals(
         $this->app->version(), $this->response->getContent()
     );
+    $email = 'doma@gmail.com';
+		$this->post('/api/v1/users/', [
+      'email' => $email,
+      'password'=> 'dumouymy'
+    ])->seeStatusCode(self::HTTP_CREATED);
 
-		$user = User::create([
-      'email' => 'dummy@gmail.com',
-      'password'=> 'dummy'
-    ]);
+    $this->get('/api/v1/users/')
+      ->seeJsonStructure([
+        'data' => [
+          [
+            'email',
+            'id'
+          ]
+        ]
+      ]);
 
-    $this->seeInDatabase('users', ['email' => $user->email]);
+    $this->seeInDatabase('users', ['email' => $email]);
   }
 }
