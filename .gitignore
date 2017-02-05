@@ -4,6 +4,7 @@ Homestead.json
 Homestead.yaml
 .env
 database/*.sqlite
+database/*.sqlite_snapshot
 
 tests/_output/*
 tests/_support/_generated/
