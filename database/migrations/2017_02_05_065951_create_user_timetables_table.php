@@ -16,11 +16,13 @@ class CreateUserTimetablesTable extends Migration
     Schema::create('user_timetables', function (Blueprint $table) {
       $table->increments('id');
       $table->timestamps();
+      $table->integer('user_id')->unsigned();
+      $table->integer('timetable_id')->unsigned();
 
       //if user or timetable is deleted, delete record
       $table->foreign('user_id')->references('id')
         ->on('users')->onDelete('cascade');
-      $table->foreign('table_id')->references('id')
+      $table->foreign('timetable_id')->references('id')
         ->on('tables')->onDelete('cascade');
     });
   }

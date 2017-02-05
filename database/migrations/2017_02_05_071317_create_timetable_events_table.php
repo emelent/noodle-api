@@ -16,6 +16,8 @@ class CreateTimetableEventsTable extends Migration
     Schema::create('timetable_events', function (Blueprint $table) {
       $table->increments('id');
       $table->timestamps();
+      $table->integer('event_id')->unsigned();
+      $table->integer('timetable_id')->unsigned();
 
       //if event or timetable is deleted, delete record
       $table->foreign('timetable_id')->references('id')

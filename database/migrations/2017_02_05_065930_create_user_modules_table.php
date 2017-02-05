@@ -16,6 +16,8 @@ class CreateUserModulesTable extends Migration
     Schema::create('user_modules', function (Blueprint $table) {
       $table->increments('id');
       $table->timestamps();
+      $table->integer('user_id')->unsigned();
+      $table->integer('module_id')->unsigned();
 
       //when either of the foreign models is deleted so is this
       //record

@@ -23,6 +23,9 @@ class CreateEventsTable extends Migration
       $table->date('date')->nullable();
       $table->tinyInteger('language');
       $table->tinyInteger('group');
+      $table->integer('creator_id')->unsigned()->nullable();
+      $table->integer('module_id')->unsigned();
+
       $table->foreign('creator_id')->references('id')
         ->on('users');
       //if a module is deleted so are it's related events
