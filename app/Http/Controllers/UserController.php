@@ -19,13 +19,13 @@ class UserController extends Controller{
 					'email' => $request->get('email'),
 					'password'=> Hash::make($request->get('password'))
 				]);
-		return $this->success("The user with email {$user->email} has been created", self::HTTP_CREATED);
+		return $this->success("The user with email {$user->email} has been created.", self::HTTP_CREATED);
 	}
 
 	public function show($id){
 		$user = User::find($id);
 		if(!$user){
-			return $this->error("The user with {$id} doesn't exist", self::HTTP_NOT_FOUND);
+			return $this->error("The user with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 		return $this->success($user, self::HTTP_OK);
 	}
@@ -39,16 +39,16 @@ class UserController extends Controller{
 		$user->email 		= $request->get('email');
 		$user->password 	= Hash::make($request->get('password'));
 		$user->save();
-		return $this->success("The user with id {$user->id} has been updated", self::HTTP_OK);
+		return $this->success("The user with id {$user->id} has been updated.", self::HTTP_OK);
 	}
 
 	public function destroy($id){
 		$user = User::find($id);
 		if(!$user){
-			return $this->error("The user with {$id} doesn't exist", self::HTTP_NOT_FOUND);
+			return $this->error("The user with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 		$user->delete();
-		return $this->success("The user with id {$id} has been deleted", self::HTTP_OK);
+		return $this->success("The user with id {$id} has been deleted.", self::HTTP_OK);
 	}
 
 	public function validateRequest(Request $request){
