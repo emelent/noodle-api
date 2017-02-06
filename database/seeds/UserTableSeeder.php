@@ -12,14 +12,10 @@ class UserTableSeeder extends Seeder
    */
   public function run()
   {
-    //disable foreign key checking because truncate() will fail
-    //DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+      //
 
     User::truncate();
 
     factory(User::class, 10)->create();
-
-    //re-enable foreign key checks
-    //DB::statement('SET FOREIGN_KEY_CHECKS = 0');
   }
 }
