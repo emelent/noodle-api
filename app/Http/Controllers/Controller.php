@@ -12,6 +12,6 @@ class Controller extends BaseController implements Httpstatuscodes
   } 
 
   public function error($message, $code){
-    return response()->json(['message' => $message, $code]);
+    return response()->json(['message' => $message], $code);
   }
 }
