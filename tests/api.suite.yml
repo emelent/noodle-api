@@ -1,14 +1,7 @@
 class_name: ApiTester
 modules:
     enabled:
-        - REST:
-            url: 'http://localhost:3000/api/v1/'
-            depends: PhpBrowser
-            part: Json
         - Asserts
-        - Db:
-            dsn: 'sqlite:database/database.sqlite'
-            dump: tests/_data/dump.sql
         - Lumen:
             part: ORM
         - \Helper\Api
