@@ -13,7 +13,7 @@ class UserRoutesTest extends TestCase
 {
 
   use DatabaseTransactions;
-  use \Codeception\Specify;
+  //use \Codeception\Specify;
 
 
   /**
@@ -113,7 +113,6 @@ class UserRoutesTest extends TestCase
     $email = 'doma';
     $password = 'password99';
 
-    echo "email => $email";
     //check that the api responds accordingly
     $this->post('/api/v1/users/', [
       'email' => $email, 'password' => $password
