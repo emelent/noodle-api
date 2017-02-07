@@ -39,7 +39,8 @@ class UserRoutesTest extends TestCase
 
   /**
    * I send a GET request to /api/v1/users/{id} where {id} is a
-   * valid user id and the server returns a list of users. 
+   * valid user id and the server returns the user with a matching
+   * id. 
    * (TODO add authentication)
    *
    * @return void
@@ -312,4 +313,37 @@ class UserRoutesTest extends TestCase
       'email' => 'new email',
     ])->seeStatusCode(self::HTTP_NOT_FOUND);
   }
+
+  /**
+   * I send a DELETE request to /api/v1/users/{id} where {id} is a
+   * valid user id and the server deletes the user from the database.
+   *
+   * (TODO add authentication)
+   *
+   * @return void
+   */
+  public function testCanDeleteUser(){
+    $that = $this;
+    $id = 1;
+    $that->delete("/api/v1/users/$id/")
+      ->seeStatusCode(self::HTTP_OK);
+
+    $this->missingFromDatabase('users', ['id' => $id]);
+  }
+
+  /**
+   * I send a DELETE request to /api/v1/users/{id} where {id} is an
+   * invalid user id and the server responds appropriately.
+   *
+   * (TODO add authentication)
+   *
+   * @return void
+   */
+  public function testDoesNotDeleteInvalidUser(){
+    $that = $this;
+    $id = 'invalid';
+    $that->delete("/api/v1/users/$id/")
+      ->seeStatusCode(self::HTTP_NOT_FOUND);
+  }
+
 }
