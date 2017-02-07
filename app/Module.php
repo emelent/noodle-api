@@ -14,7 +14,7 @@ class Module extends Model
      */
     protected $fillable = [
       'name', 'description', 'code',
-      'type', 'year'
+      'type', 'period'
     ];
 
     public function users(){
