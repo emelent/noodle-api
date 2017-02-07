@@ -10,12 +10,16 @@
         "vlucas/phpdotenv": "~2.2",
         "lukasoppermann/http-status": "^2.0",
         "codeception/codeception": "*",
-        "flow/jsonpath": "^0.3.4"
+        "flow/jsonpath": "^0.3.4",
+        "kujira/phpunit-printer": "1.0.1",
+        "limedeck/phpunit-detailed-printer": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~5.0",
-        "mockery/mockery": "~0.9"
+        "mockery/mockery": "~0.9",
+        "diablomedia/phpunit-pretty-printer": "^1.0",
+        "whatthejeff/nyancat-phpunit-resultprinter": "^1.2"
     },
     "autoload": {
         "psr-4": {
