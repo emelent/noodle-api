@@ -15,11 +15,11 @@ class CreateModulesTable extends Migration
   {
     Schema::create('modules', function (Blueprint $table) {
       $table->increments('id');
-      $table->string('code');
+      $table->string('code')->unique();
       $table->string('name');
       $table->text('description');
+      $table->string('period');
       $table->integer('type');
-      $table->integer('year');
     });
   }
 
