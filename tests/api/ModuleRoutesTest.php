@@ -207,4 +207,36 @@ class ModuleRoutesTest extends TestCase
       'code' => 'new code',
     ])->seeStatusCode(self::HTTP_NOT_FOUND);
   }
+
+  /**
+   * I send a DELETE request to /api/v1/modules/{id} where {id} is a
+   * valid module id and the server deletes the module from the database.
+   *
+   * (TODO add authentication)
+   *
+   * @return void
+   */
+  public function testCanDeletemodule(){
+    $that = $this;
+    $id = 1;
+    $that->delete("/api/v1/modules/$id/")
+      ->seeStatusCode(self::HTTP_OK);
+
+    $this->missingFromDatabase('modules', ['id' => $id]);
+  }
+
+  /**
+   * I send a DELETE request to /api/v1/modules/{id} where {id} is an
+   * invalid module id and the server responds appropriately.
+   *
+   * (TODO add authentication)
+   *
+   * @return void
+   */
+  public function testDoesNotDeleteInvalidmodule(){
+    $that = $this;
+    $id = 'invalid';
+    $that->delete("/api/v1/modules/$id/")
+      ->seeStatusCode(self::HTTP_NOT_FOUND);
+  }
 }
