@@ -22,7 +22,7 @@ class CreateEventsTable extends Migration
       $table->time('end');
       $table->date('date')->nullable();
       $table->tinyInteger('language');
-      $table->tinyInteger('group');
+      $table->tinyInteger('group')->unsigned()->nullable();
       $table->integer('creator_id')->unsigned()->nullable();
       $table->integer('module_id')->unsigned();
 
@@ -31,6 +31,9 @@ class CreateEventsTable extends Migration
       //if a module is deleted so are it's related events
       $table->foreign('module_id')->references('id')
         ->on('modules')->onDelete('cascade');
+
+      //create composite key from name, module_id, group
+      $table->primary(['group', 'module_id', 'name']);
     });
   }
 
