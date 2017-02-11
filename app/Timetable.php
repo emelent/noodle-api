@@ -13,9 +13,8 @@ class Timetable extends Model
      * @var array
      */
     protected $fillable = [
-      'name', 'day', 'start', 'end',
-      'date', 'language', 'group',
-      'creator_id', 'module_id'
+      'name',
+      'creator_id'
     ];
 
     public function creator(){
