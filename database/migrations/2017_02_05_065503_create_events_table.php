@@ -33,7 +33,7 @@ class CreateEventsTable extends Migration
         ->on('modules')->onDelete('cascade');
 
       //create composite key from name, module_id, group
-      $table->primary(['group', 'module_id', 'name']);
+      $table->unique(['group', 'module_id', 'name']);
     });
   }
 
