@@ -16,7 +16,7 @@ class CreateTimetablesTable extends Migration
     Schema::create('timetables', function (Blueprint $table) {
       $table->increments('id');
       $table->timestamps();
-      $table->string('hash');
+      $table->string('hash')->nullable()->unique();
       $table->integer('creator_id')->unsigned();
 
       $table->foreign('creator_id')->references('id')

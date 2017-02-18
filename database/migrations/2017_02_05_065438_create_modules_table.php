@@ -20,6 +20,7 @@ class CreateModulesTable extends Migration
       $table->text('description');
       $table->string('period');
       $table->integer('type');
+      $table->timestamps();
     });
   }
 
