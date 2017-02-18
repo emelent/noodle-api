@@ -13,7 +13,6 @@ class Timetable extends Model
      * @var array
      */
     protected $fillable = [
-      'name',
       'creator_id'
     ];
 
