@@ -14,6 +14,36 @@ const NUM_TABLES = 10;
 
 class DummySeeder extends Seeder
 {
+
+  /**
+   * Disable foreign key checks on Sqlite3 database or MYSQL
+   *
+   * @return void
+   */
+  public function disableForeignKeyChecks(){
+    try{
+        DB::statement('PRAGMA foreign_keys = OFF');
+    }catch(PDOException $e){
+      try{
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+      }catch(PDOException $e){}
+    }
+  }
+
+  /**
+   * Enable foreign key checks on Sqlite3 database or MYSQL
+   *
+   * @return void
+   */
+  public function enableForeignKeyChecks(){
+    try{
+        DB::statement('PRAGMA foreign_keys = ON');
+    }catch(PDOException $e){
+      try{
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+      }catch(PDOException $e){}
+    }
+  }
   /**
    * Run the database seeds.
    *
@@ -21,7 +51,9 @@ class DummySeeder extends Seeder
    */
   public function run()
   {
+
     //clear respective db tables
+    $this->disableForeignKeyChecks();
     User::truncate();
     Module::truncate();
     Event::truncate();
@@ -69,5 +101,7 @@ class DummySeeder extends Seeder
         ]);
       }
     });
+
+    $this->enableForeignKeyChecks();
   }
 }
