@@ -23,7 +23,7 @@ class CreateUserTimetablesTable extends Migration
       $table->foreign('user_id')->references('id')
         ->on('users')->onDelete('cascade');
       $table->foreign('timetable_id')->references('id')
-        ->on('tables')->onDelete('cascade');
+        ->on('timetables')->onDelete('cascade');
     });
   }
 
