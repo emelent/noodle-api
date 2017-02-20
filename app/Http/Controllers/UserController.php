@@ -48,7 +48,7 @@ class UserController extends Controller{
 			return $this->error("The user with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 		$user->delete();
-		return $this->success("The user with id {$id} has been deleted.", self::HTTP_OK);
+		return $this->success("The user has been deleted.", self::HTTP_OK);
 	}
 
 	public function validateRequest(Request $request){
