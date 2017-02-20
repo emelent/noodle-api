@@ -3,6 +3,14 @@
   <target name="api-unit" depends="test-api"/>
   <target name="clean" depends="migrate,migrate-test" />
 
+  <target name="run">
+    <exec executable="php">
+      <arg value="-S" />
+      <arg value="0.0.0.0:3000" />
+      <arg value="-t" />
+      <arg path="${basedir}/public/" />
+    </exec>
+  </target>
   <target name="test-api">
     <exec executable="phpunit">
       <arg path="${basedir}/tests/api/" />
