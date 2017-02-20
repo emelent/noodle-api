@@ -27,7 +27,7 @@ class CreateEventsTable extends Migration
       $table->integer('module_id')->unsigned();
 
       $table->foreign('creator_id')->references('id')
-        ->on('users');
+        ->on('users')->onDelete('cascade');
       //if a module is deleted so are it's related events
       $table->foreign('module_id')->references('id')
         ->on('modules')->onDelete('cascade');
