@@ -19,9 +19,9 @@ class TimetableEventRoutesTest extends TestCase
 
   /**
    * I send a POST request to /api/v1/timetables/{id}/events/ where
-   * id is a valid timetable id with the parameter events 
+   * id is a valid timetable id with the parameter 'events' 
    * containing a json string of an array of valid event id's and 
-   * the server creates the relevant records in the database and 
+   * the server adds the given events to the timetable and 
    * responds appropriately.
    *
    * (TODO add authentication)
@@ -54,7 +54,10 @@ class TimetableEventRoutesTest extends TestCase
 
   /**
    * I send a DELETE request to /api/v1/timetables/{id}/events/ 
-   * where id is a valid timetable id with
+   * where id is a valid timetable id with the parameter 'events' 
+   * containing a json string of an array of valid event id's and 
+   * the server remove the selected events from the timetable and
+   * responds appropriately.
    * (TODO add authentication)
    *
    * @return void
@@ -86,6 +89,14 @@ class TimetableEventRoutesTest extends TestCase
     }
   }
 
+
+  /**
+   * I send a GET request to /api/v1/timetables/{id}/events/ 
+   * where id is a valid timetable id with
+   * (TODO add authentication)
+   *
+   * @return void
+   */
   public function testCanShowEvents(){
     $this->get('/');
 
