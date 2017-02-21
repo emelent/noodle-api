@@ -15,62 +15,16 @@ const MSG_DESC_REQUIRED = '';
 const MSG_NAME_REQUIRED = '';
 const MSG_PERIOD_REQUIRED = '';
 
-class ModuleRoutesTest extends TestCase
+class ModuleControllerTest extends ModelControllerTestCase
 {
 
-  use DatabaseTransactions;
-  //use \Codeception\Specify;
-
-
-  /**
-   * I send a GET request to /api/v1/modules/ and the server
-   * returns a list of modules. (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testCanShowAllModules(){
-    $that = $this;
-    $that->get('/api/v1/modules/')
-      ->seeStatusCode(self::HTTP_OK)
-      ->seeJsonStructure([
-        'data'  => [
-          '*' => MODULE_FIELDS
-        ]
-      ]);
-  }
-
-
-  /**
-   * I send a GET request to /api/v1/modules/{id} where {id} is a
-   * valid module id and the server returns a list of modules. 
-   * (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testCanShowModuleById(){
-    $that = $this;
-    $that->get('/api/v1/modules/1/')
-      ->seeStatusCode(self::HTTP_OK)
-      ->seeJsonStructure([
-        'data'  => MODULE_FIELDS
-      ]);
-  }
-
-
-  /**
-   * I send a GET request to /api/v1/modules/{id} where id is
-   * an invalid module id and the server returns an error.
-   *
-   * @expectedException
-   *
-   * @return void
-   */
-  public function testDoesNotShowModuleWithAnInvalidId(){
-    $that = $this;
-    $invalidModuleId = 'invalid';
-    $that->get("/api/v1/modules/$invalidModuleId/")
-      ->seeStatusCode(self::HTTP_NOT_FOUND);
-  }
+  protected $tableName = 'modules';
+  protected $modelClass = Module::class;
+  protected $modelRoutePrefix = '/api/v1/modules';
+  protected $modelFields = [
+    'id', 'code','description', 
+    'name', 'type', 'period'
+  ];
 
   /**
    * I send a POST request to /api/v1/modules/ with valid
@@ -81,11 +35,10 @@ class ModuleRoutesTest extends TestCase
    * @return void
    */
   public function testCanCreateANewModuleWithValidData(){
-    $this->get('/');
+    $this->requestHack();
+
     $code = 'MOD385';
-
-
-    $this->post('/api/v1/modules/', [
+    $this->post("{$this->modelRoutePrefix}/", [
       'name' => 'Modulo',
       'description' => 'Description of modulo',
       'code'  => $code,
@@ -97,10 +50,11 @@ class ModuleRoutesTest extends TestCase
     ]);
 
     //check that module is in the database
-    $this->seeInDatabase('modules', [
+    $this->seeInDatabase($this->tableName, [
       'code' => $code,
     ]);
   }
+  
 
   /**
    * I send a POST request to /api/v1/modules/ with invalid
@@ -113,7 +67,7 @@ class ModuleRoutesTest extends TestCase
     $this->get('/');
     $code = 'MOD352';
 
-    $this->post('/api/v1/modules/', [
+    $this->post("{$this->modelRoutePrefix}/", [
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
         'code' => [MSG_CODE_REQUIRED],
@@ -124,12 +78,10 @@ class ModuleRoutesTest extends TestCase
       ]);
 
     //check that module is not in the database
-    $this->missingFromDatabase('modules', [
+    $this->missingFromDatabase($this->tableName, [
       'code' => $code,
     ]);
   }
-
-
 
 
   /**
@@ -141,21 +93,9 @@ class ModuleRoutesTest extends TestCase
    * @return void
    */
   public function testCanUpdateExistingModuleWithValidData(){
-    $this->get('/');
-    $module = Module::findOrFail(1);
-    $code = 'newModuleCode';
-
-    $this->assertNotEquals($code, $module->code);
-
-    //check that the api responds accordingly
-    $this->put('/api/v1/modules/1/', [
-      'code' => $code,
-    ])->seeStatusCode(self::HTTP_OK)
-      ->seeJson([
-        'data' => "The module with id {$module->id} has been updated."
-      ]);
-
-    $this->seeInDatabase('modules', ['code' => $code]);
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
   }
 
 
@@ -168,61 +108,9 @@ class ModuleRoutesTest extends TestCase
    * @return void
    */
   public function testDoesNotUpdateExistingModuleWithInvalidData(){
-    $this->get('/');
+    //$this->get('/');
     $this->markTestIncomplete(
       'This test has not been implemented yet.'
     );
-  }
-
-
-
-  /**
-   * I send a PUT request to /api/v1/modules/{id}/ where id is a 
-   * non-existing module id and the server responds with the
-   * appropriate message.
-   * 
-   * @expectedException 
-   * @return void
-   */
-  public function testDoesNotTryToUpdateANonExistingModule(){
-    $this->get('/');
-    $invalidModuleId = 'invalid';
-
-    //check that the api responds accordingly
-    $this->put("/api/v1/modules/$invalidModuleId/", [
-      'code' => 'new code',
-    ])->seeStatusCode(self::HTTP_NOT_FOUND);
-  }
-
-  /**
-   * I send a DELETE request to /api/v1/modules/{id} where {id} is a
-   * valid module id and the server deletes the module from the database.
-   *
-   * (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testCanDeleteModule(){
-    $that = $this;
-    $id = 1;
-    $that->delete("/api/v1/modules/$id/")
-      ->seeStatusCode(self::HTTP_OK);
-
-    $this->missingFromDatabase('modules', ['id' => $id]);
-  }
-
-  /**
-   * I send a DELETE request to /api/v1/modules/{id} where {id} is an
-   * invalid module id and the server responds appropriately.
-   *
-   * (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testDoesNotDeleteInvalidModule(){
-    $that = $this;
-    $id = 'invalid';
-    $that->delete("/api/v1/modules/$id/")
-      ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 }

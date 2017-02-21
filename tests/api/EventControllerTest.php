@@ -4,12 +4,6 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Event;
 
-const EVENT_FIELDS = [
-  'name', 'day', 'start', 'end',
-  'date', 'language', 'group',
-  'creator_id', 'module_id', 'created_at',
-  'updated_at'
-];
 
 const MSG_DAY_REQUIRED      = '';
 const MSG_START_REQUIRED    = '';
@@ -20,61 +14,19 @@ const MSG_CREATOR_REQUIRED  = '';
 const MSG_MODULE_REQUIRED   = '';
 
 
-class EventRoutesTest extends TestCase
+class EventControllerTest extends ModelControllerTestCase
 {
 
-  use DatabaseTransactions;
+  protected $tableName = 'events';
+  protected $modelClass = Event::class;
+  protected $modelRoutePrefix = '/api/v1/events';
+  protected $modelFields = [
+    'name', 'day', 'start', 'end',
+    'date', 'language', 'group',
+    'creator_id', 'module_id', 'created_at',
+    'updated_at'
+  ];
 
-
-  /**
-   * I send a GET request to /api/v1/events/ and the server
-   * returns a list of events. (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testCanShowAllEvents(){
-    $that = $this;
-    $that->get('/api/v1/events/')
-      ->seeStatusCode(self::HTTP_OK)
-      ->seeJsonStructure([
-        'data'  => [
-          '*' => EVENT_FIELDS
-        ]
-      ]);
-  }
-
-
-  /**
-   * I send a GET request to /api/v1/events/{id} where {id} is a
-   * valid event id and the server returns a list of events. 
-   * (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testCanShowEventById(){
-    $that = $this;
-    $that->get('/api/v1/events/1/')
-      ->seeStatusCode(self::HTTP_OK)
-      ->seeJsonStructure([
-        'data'  => EVENT_FIELDS
-      ]);
-  }
-
-
-  /**
-   * I send a GET request to /api/v1/events/{id} where id is
-   * an invalid event id and the server returns an error.
-   *
-   * @expectedException
-   *
-   * @return void
-   */
-  public function testDoesNotShowEventWithAnInvalidId(){
-    $that = $this;
-    $invalidEventId = 'invalid';
-    $that->get("/api/v1/events/$invalidEventId/")
-      ->seeStatusCode(self::HTTP_NOT_FOUND);
-  }
 
   /**
    * I send a POST request to /api/v1/events/ with valid
@@ -85,13 +37,13 @@ class EventRoutesTest extends TestCase
    * @return void
    */
   public function testCanCreateANewEventWithValidData(){
-    $this->get('/');
+    $this->requestHack();
+
     $name = 'Lesson 5';
     $group = null;
     $module_id = null;
 
-    
-    $this->post('/api/v1/events/', [
+    $this->post("{$this->modelRoutePrefix}/", [
       'name' => $name,
       'day'  => 1,
       'start' => date("Y-m-d H:i:s"),
@@ -106,12 +58,13 @@ class EventRoutesTest extends TestCase
     ]);
 
     //check that event is in the database
-    $this->seeInDatabase('events', [
+    $this->seeInDatabase("{$this->tableName}", [
       'name' => $name,
       'group' => $group,
       'module_id' => $module_id
     ]);
   }
+
 
   /**
    * I send a POST request to /api/v1/events/ with invalid
@@ -123,7 +76,7 @@ class EventRoutesTest extends TestCase
   public function testDoesNotCreateANewEventWithInvalidData(){
     $this->get('/');
     $name = 'invalid';
-    $this->post('/api/v1/events/', [
+    $this->post("{$this->modelRoutePrefix}/", [
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
         'day'         =>  [MSG_DAY_REQUIRED],
@@ -136,12 +89,10 @@ class EventRoutesTest extends TestCase
       ]);
 
     //check that event is not in the database
-    $this->missingFromDatabase('events', [
+    $this->missingFromDatabase("{$this->tableName}", [
       'name' => $name,
     ]);
   }
-
-
 
 
   /**
@@ -153,21 +104,9 @@ class EventRoutesTest extends TestCase
    * @return void
    */
   public function testCanUpdateExistingEventWithValidData(){
-    $this->get('/');
-    $event = Event::findOrFail(1);
-    $newName = 'newEventName';
-
-    $this->assertNotEquals($newName, $event->name);
-
-    //check that the api responds accordingly
-    $this->put('/api/v1/events/1/', [
-      'name' => $newName,
-    ])->seeStatusCode(self::HTTP_OK)
-      ->seeJson([
-        'data' => "The event with id {$event->id} has been updated."
-      ]);
-
-    $this->seeInDatabase('events', ['newName' => $newName]);
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
   }
 
 
@@ -180,61 +119,8 @@ class EventRoutesTest extends TestCase
    * @return void
    */
   public function testDoesNotUpdateExistingEventWithInvalidData(){
-    $this->get('/');
     $this->markTestIncomplete(
       'This test has not been implemented yet.'
     );
-  }
-
-
-
-  /**
-   * I send a PUT request to /api/v1/events/{id}/ where id is a 
-   * non-existing event id and the server responds with the
-   * appropriate message.
-   * 
-   * @expectedException 
-   * @return void
-   */
-  public function testDoesNotTryToUpdateANonExistingEvent(){
-    $this->get('/');
-    $invalidEventId = 'invalid';
-
-    //check that the api responds accordingly
-    $this->put("/api/v1/events/$invalidEventId/", [
-      'name' => 'newName',
-    ])->seeStatusCode(self::HTTP_NOT_FOUND);
-  }
-
-  /**
-   * I send a DELETE request to /api/v1/events/{id} where {id} is a
-   * valid event id and the server deletes the event from the database.
-   *
-   * (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testCanDeleteEvent(){
-    $that = $this;
-    $id = 1;
-    $that->delete("/api/v1/events/$id/")
-      ->seeStatusCode(self::HTTP_OK);
-
-    $this->missingFromDatabase('events', ['id' => $id]);
-  }
-
-  /**
-   * I send a DELETE request to /api/v1/events/{id} where {id} is an
-   * invalid event id and the server responds appropriately.
-   *
-   * (TODO add authentication)
-   *
-   * @return void
-   */
-  public function testDoesNotDeleteInvalidEvent(){
-    $that = $this;
-    $id = 'invalid';
-    $that->delete("/api/v1/events/$id/")
-      ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 }
