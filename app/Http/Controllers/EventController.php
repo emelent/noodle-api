@@ -13,9 +13,10 @@ class EventController extends ModelController{
 
 	public function store(Request $request){
 		$this->validateRequest($request);
+
     //TODO get current user ID
-    //
-    $user_id = 1;
+    $user_id = 1; // oh, you dirty, dirty line of code
+
 		$event = Event::create([
       'name' => $request->get('name'),
       'date' => $request->get('date'),
