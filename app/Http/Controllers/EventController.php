@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Event;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
-class EventController extends Controller{
+class EventController extends ModelController{
 
-	public function index(){
-		$events = Event::all();
-		return $this->success($events, self::HTTP_OK);
-	}
+  public function __construct(){
+    parent::__construct(Event::class);
+  }
 
 	public function store(Request $request){
 		$this->validateRequest($request);
@@ -32,14 +30,6 @@ class EventController extends Controller{
 		return $this->success("The event has been created.", self::HTTP_CREATED);
 	}
 
-	public function show($id){
-		$event = Event::find($id);
-		if(!$event){
-			return $this->error("The event with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
-		}
-		return $this->success($event, self::HTTP_OK);
-	}
-
 	public function update(Request $request, $id){
 		$event = Event::find($id);
 		if(!$event){
@@ -58,18 +48,6 @@ class EventController extends Controller{
 		return $this->success("The event with id {$event->id} has been updated.", self::HTTP_OK);
 	}
 
-	public function destroy($id){
-		$event = Event::find($id);
-		if(!$event){
-			return $this->error("The event with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
-		}
-		$event->delete();
-		return $this->success("The event has been deleted.", self::HTTP_OK);
-	}
-
-  public function search(){
-    return $this->index();
-  }
 	public function validateRequest(Request $request){
 		$rules = [
 			'email' => 'required|email|unique:events', 
