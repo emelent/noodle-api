@@ -56,4 +56,15 @@ $app->group([
     $app->put('/{module_id}', 'ModuleController@update');
     $app->delete('/{module_id}', 'ModuleController@destroy');
   });
+
+  /*timetable routes*/
+  $app->group([
+    'prefix'  =>  'timetables/',
+  ], function() use ($app){
+    $app->get('/', 'TimetableController@showAll');
+    $app->post('/', 'TimetableController@store');
+    $app->get('/{timetable_id}', 'TimetableController@show');
+    $app->put('/{timetable_id}', 'TimetableController@update');
+    $app->delete('/{module_id}', 'TimetableController@destroy');
+  });
 });
