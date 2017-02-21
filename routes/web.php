@@ -45,4 +45,15 @@ $app->group([
     $app->put('/{event_id}', 'EventController@update');
     $app->delete('/{event_id}', 'EventController@destroy');
   });
+
+  /*module routes*/
+  $app->group([
+    'prefix'  =>  'modules/',
+  ], function() use ($app){
+    $app->get('/', 'ModuleController@showAll');
+    $app->post('/', 'ModuleController@store');
+    $app->get('/{module_id}', 'ModuleController@show');
+    $app->put('/{module_id}', 'ModuleController@update');
+    $app->delete('/{module_id}', 'ModuleController@destroy');
+  });
 });
