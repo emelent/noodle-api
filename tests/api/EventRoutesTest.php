@@ -181,6 +181,9 @@ class EventRoutesTest extends TestCase
    */
   public function testDoesNotUpdateExistingEventWithInvalidData(){
     $this->get('/');
+    $this->markTestIncomplete(
+      'This test has not been implemented yet.'
+    );
   }
 
 
