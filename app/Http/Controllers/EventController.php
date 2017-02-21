@@ -50,10 +50,10 @@ class EventController extends ModelController{
 	}
 
 	public function validateRequest(Request $request){
-		$rules = [
-			'email' => 'required|email|unique:events', 
-			'password' => 'required|min:6'
-		];
-		$this->validate($request, $rules);
+		//$rules = [
+			//'email' => 'required|email|unique:events', 
+			//'password' => 'required|min:6'
+		//];
+		//$this->validate($request, $rules);
 	}
 }
