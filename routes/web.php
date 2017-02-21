@@ -33,6 +33,24 @@ $app->group([
     $app->get('/{user_id}', 'UserController@show');
     $app->put('/{user_id}', 'UserController@update');
     $app->delete('/{user_id}', 'UserController@destroy');
+
+    /*user module routes*/
+    $app->group([
+      'prefix'  =>  '/{user_id}/modules/'
+    ], function() use($app){
+      $app->get('/', 'UserModuleController@showAll');
+      $app->delete('/', 'UserModuleController@remove');
+      $app->post('/', 'UserModuleController@add');
+    });
+
+    /*user timetable routes*/
+    $app->group([
+      'prefix'  =>  '/{user_id}/timetables/'
+    ], function() use($app){
+      $app->get('/', 'UserTimetableController@showAll');
+      $app->delete('/', 'UserTimetableController@remove');
+      $app->post('/', 'UserTimetableController@add');
+    });
   });
 
   /*event routes*/
