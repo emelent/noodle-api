@@ -211,7 +211,7 @@ class EventRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanDeleteevent(){
+  public function testCanDeleteEvent(){
     $that = $this;
     $id = 1;
     $that->delete("/api/v1/events/$id/")
@@ -228,7 +228,7 @@ class EventRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testDoesNotDeleteInvalidevent(){
+  public function testDoesNotDeleteInvalidEvent(){
     $that = $this;
     $id = 'invalid';
     $that->delete("/api/v1/events/$id/")

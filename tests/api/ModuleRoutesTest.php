@@ -216,7 +216,7 @@ class ModuleRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanDeletemodule(){
+  public function testCanDeleteModule(){
     $that = $this;
     $id = 1;
     $that->delete("/api/v1/modules/$id/")
@@ -233,7 +233,7 @@ class ModuleRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testDoesNotDeleteInvalidmodule(){
+  public function testDoesNotDeleteInvalidModule(){
     $that = $this;
     $id = 'invalid';
     $that->delete("/api/v1/modules/$id/")
