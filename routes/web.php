@@ -84,5 +84,14 @@ $app->group([
     $app->get('/{timetable_id}', 'TimetableController@show');
     $app->put('/{timetable_id}', 'TimetableController@update');
     $app->delete('/{module_id}', 'TimetableController@destroy');
+
+    /*timetable event routes*/
+    $app->group([
+      'prefix'  =>  '/{timetable_id}/events/'
+    ], function() use($app){
+      $app->get('/', 'TimetableEventController@showAll');
+      $app->delete('/', 'TimetableEventController@remove');
+      $app->post('/', 'TimetableEventController@add');
+    });
   });
 });
