@@ -28,7 +28,7 @@ $app->group([
   $app->group([
     'prefix'  =>  'users/',
   ], function() use ($app){
-    $app->get('/', 'UserController@index');
+    $app->get('/', 'UserController@showAll');
     $app->post('/', 'UserController@store');
     $app->get('/{user_id}', 'UserController@show');
     $app->put('/{user_id}', 'UserController@update');
@@ -39,11 +39,10 @@ $app->group([
   $app->group([
     'prefix'  =>  'events/',
   ], function() use ($app){
-    $app->get('/', 'EventController@index');
+    $app->get('/', 'EventController@showAll');
     $app->post('/', 'EventController@store');
     $app->get('/{event_id}', 'EventController@show');
     $app->put('/{event_id}', 'EventController@update');
     $app->delete('/{event_id}', 'EventController@destroy');
-    $app->get('/where/', 'EventController@search');
   });
 });

@@ -8,8 +8,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller{
 
-	public function index(){
-		$users = User::all();
+
+	public function show($id){
+		$user = User::find($id);
+		if(!$user){
+			return $this->error("The user with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
+		}
+		return $this->success($user, self::HTTP_OK);
+	}
+
+	public function showAll(){
+		$users = User::all()->where('id', 2);
 		return $this->success($users, self::HTTP_OK);
 	}
 
@@ -20,14 +29,6 @@ class UserController extends Controller{
 					'password'=> Hash::make($request->get('password'))
 				]);
 		return $this->success("The user with email {$user->email} has been created.", self::HTTP_CREATED);
-	}
-
-	public function show($id){
-		$user = User::find($id);
-		if(!$user){
-			return $this->error("The user with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
-		}
-		return $this->success($user, self::HTTP_OK);
 	}
 
 	public function update(Request $request, $id){
