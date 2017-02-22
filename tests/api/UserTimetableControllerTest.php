@@ -16,7 +16,7 @@ class UserTimetableRoutesTest extends TestCase
 
 
   /**
-   * I send a POST request to /api/v1/users/{id}/timetables/ where
+   * I send a POST request to /v1/users/{id}/timetables/ where
    * id is a valid user id with the parameter 'timetables' 
    * containing a json string of an array of valid timetable id's and 
    * the server adds the given timetables to the user and 
@@ -34,7 +34,7 @@ class UserTimetableRoutesTest extends TestCase
     $numTimetables = count($timetables);
     $timetablesJson = json_encode($timetables);
 
-    $this->post("/api/v1/users/$user_id/timetables", [
+    $this->post("/v1/users/$user_id/timetables", [
       'timetables'  => $timetablesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -51,7 +51,7 @@ class UserTimetableRoutesTest extends TestCase
   }
 
   /**
-   * I send a DELETE request to /api/v1/users/{id}/timetables/ 
+   * I send a DELETE request to /v1/users/{id}/timetables/ 
    * where id is a valid user id with the parameter 'timetables' 
    * containing a json string of an array of valid timetable id's and 
    * the server remove the selected timetables from the user and
@@ -71,7 +71,7 @@ class UserTimetableRoutesTest extends TestCase
     $timetablesArr = $timetables->toArray();
     $timetablesJson = json_encode($timetablesArr);
 
-    $this->delete("/api/v1/users/$id/timetables", [
+    $this->delete("/v1/users/$id/timetables", [
       'timetables'  =>  $timetablesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -89,7 +89,7 @@ class UserTimetableRoutesTest extends TestCase
 
 
   /**
-   * I send a GET request to /api/v1/users/{id}/timetables/ 
+   * I send a GET request to /v1/users/{id}/timetables/ 
    * where id is a valid user id with
    * (TODO add authentication)
    *
@@ -100,7 +100,7 @@ class UserTimetableRoutesTest extends TestCase
 
     $id = 1;
     if(User::findOrFail($id)->timetables()->count() > 0){
-      $this->get("/api/v1/users/$id/timetables")
+      $this->get("/v1/users/$id/timetables")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [

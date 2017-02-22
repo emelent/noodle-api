@@ -10,7 +10,7 @@ class TimetableRoutesTest extends ModelControllerTestCase
 
   protected $modelClass = Timetable::class; 
   protected $tableName = 'timetables';
-  protected $modelRoutePrefix = '/api/v1/timetables';
+  protected $modelRoutePrefix = '/v1/timetables';
   protected $modelFields = [
     'id', 'hash', 'creator_id',
     'created_at', 'updated_at'
@@ -18,7 +18,7 @@ class TimetableRoutesTest extends ModelControllerTestCase
 
 
   /**
-   * I send a POST request to /api/v1/timetables/ with valid
+   * I send a POST request to /v1/timetables/ with valid
    * data and the server creates a new timetable in the database.
    *
    * (TODO add authentication)
@@ -34,7 +34,7 @@ class TimetableRoutesTest extends ModelControllerTestCase
 
 
   /**
-   * I send a POST request to /api/v1/timetables/ with invalid
+   * I send a POST request to /v1/timetables/ with invalid
    * data and the server sends an appropriate response and
    * does not create a timetable in the database.
    *
@@ -49,7 +49,7 @@ class TimetableRoutesTest extends ModelControllerTestCase
 
 
   /**
-   * I send a PUT request to /api/v1/timetables/{id}/ and 
+   * I send a PUT request to /v1/timetables/{id}/ and 
    * the server updates the timetable matching the given id
    * in the database with the received data and returns 
    * the appropriate response.
@@ -64,7 +64,7 @@ class TimetableRoutesTest extends ModelControllerTestCase
 
 
   /**
-   * I send a PUT request to /api/v1/timetables/{id}/ and 
+   * I send a PUT request to /v1/timetables/{id}/ and 
    * the server updates the timetable matching the given id
    * in the database with the received data and returns 
    * the appropriate response.

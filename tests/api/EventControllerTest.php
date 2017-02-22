@@ -19,7 +19,7 @@ class EventControllerTest extends ModelControllerTestCase
 
   protected $tableName = 'events';
   protected $modelClass = Event::class;
-  protected $modelRoutePrefix = '/api/v1/events';
+  protected $modelRoutePrefix = '/v1/events';
   protected $modelFields = [
     'name', 'day', 'start', 'end',
     'date', 'language', 'group',
@@ -29,7 +29,7 @@ class EventControllerTest extends ModelControllerTestCase
 
 
   /**
-   * I send a POST request to /api/v1/events/ with valid
+   * I send a POST request to /v1/events/ with valid
    * data and the server creates a new event in the database.
    *
    * (TODO add authentication)
@@ -67,7 +67,7 @@ class EventControllerTest extends ModelControllerTestCase
 
 
   /**
-   * I send a POST request to /api/v1/events/ with invalid
+   * I send a POST request to /v1/events/ with invalid
    * data and the server sends an appropriate response and
    * does not create a event in the database.
    *
@@ -96,7 +96,7 @@ class EventControllerTest extends ModelControllerTestCase
 
 
   /**
-   * I send a PUT request to /api/v1/events/{id}/ and 
+   * I send a PUT request to /v1/events/{id}/ and 
    * the server updates the event matching the given id
    * in the database with the received data and returns 
    * the appropriate response.
@@ -111,7 +111,7 @@ class EventControllerTest extends ModelControllerTestCase
 
 
   /**
-   * I send a PUT request to /api/v1/events/{id}/ and 
+   * I send a PUT request to /v1/events/{id}/ and 
    * the server updates the event matching the given id
    * in the database with the received data and returns 
    * the appropriate response.

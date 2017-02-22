@@ -20,14 +20,14 @@ class ModuleControllerTest extends ModelControllerTestCase
 
   protected $tableName = 'modules';
   protected $modelClass = Module::class;
-  protected $modelRoutePrefix = '/api/v1/modules';
+  protected $modelRoutePrefix = '/v1/modules';
   protected $modelFields = [
     'id', 'code','description', 
     'name', 'type', 'period'
   ];
 
   /**
-   * I send a POST request to /api/v1/modules/ with valid
+   * I send a POST request to /v1/modules/ with valid
    * data and the server creates a new module in the database.
    *
    * (TODO add authentication)
@@ -57,7 +57,7 @@ class ModuleControllerTest extends ModelControllerTestCase
   
 
   /**
-   * I send a POST request to /api/v1/modules/ with invalid
+   * I send a POST request to /v1/modules/ with invalid
    * data and the server sends an appropriate response and
    * does not create a module in the database.
    *
@@ -85,7 +85,7 @@ class ModuleControllerTest extends ModelControllerTestCase
 
 
   /**
-   * I send a PUT request to /api/v1/modules/{id}/ and 
+   * I send a PUT request to /v1/modules/{id}/ and 
    * the server updates the module matching the given id
    * in the database with the received data and returns 
    * the appropriate response.
@@ -100,7 +100,7 @@ class ModuleControllerTest extends ModelControllerTestCase
 
 
   /**
-   * I send a PUT request to /api/v1/modules/{id}/ and 
+   * I send a PUT request to /v1/modules/{id}/ and 
    * the server updates the module matching the given id
    * in the database with the received data and returns 
    * the appropriate response.

@@ -17,14 +17,14 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a GET request to /api/v1/users/ and the server
+   * I send a GET request to /v1/users/ and the server
    * returns a list of users. (TODO add authentication)
    *
    * @return void
    */
   public function testCanShowAllUsers(){
     $that = $this;
-    $that->get('/api/v1/users/')
+    $that->get('/v1/users/')
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -38,7 +38,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a GET request to /api/v1/users/{id} where {id} is a
+   * I send a GET request to /v1/users/{id} where {id} is a
    * valid user id and the server returns the user with a matching
    * id. 
    * (TODO add authentication)
@@ -47,7 +47,7 @@ class UserRoutesTest extends TestCase
    */
   public function testCanShowUserById(){
     $that = $this;
-    $that->get('/api/v1/users/1/')
+    $that->get('/v1/users/1/')
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -59,7 +59,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a GET request to /api/v1/users/{id} where id is
+   * I send a GET request to /v1/users/{id} where id is
    * an invalid user id and the server returns an error.
    *
    * @expectedException
@@ -69,12 +69,12 @@ class UserRoutesTest extends TestCase
   public function testDoesNotShowUserWithAnInvalidId(){
     $that = $this;
     $invalidUserId = 'invalid';
-    $that->get("/api/v1/users/$invalidUserId/")
+    $that->get("/v1/users/$invalidUserId/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
   /**
-   * I send a POST request to /api/v1/users/ with valid
+   * I send a POST request to /v1/users/ with valid
    * data and the server creates a new user in the database.
    *
    * (TODO add authentication)
@@ -88,7 +88,7 @@ class UserRoutesTest extends TestCase
     $password = 'password99';
 
 
-    $this->post('/api/v1/users/', [
+    $this->post('/v1/users/', [
       'email' => $email,
       'password' => $password
     ])->seeStatusCode(self::HTTP_CREATED)
@@ -103,7 +103,7 @@ class UserRoutesTest extends TestCase
   }
 
   /**
-   * I send a POST request to /api/v1/users/ with an invalid
+   * I send a POST request to /v1/users/ with an invalid
    * email and the server sends an appropriate response and
    * does not create a user in the database.
    *
@@ -115,7 +115,7 @@ class UserRoutesTest extends TestCase
     $password = 'password99';
 
     //check that the api responds accordingly
-    $this->post('/api/v1/users/', [
+    $this->post('/v1/users/', [
       'email' => $email, 'password' => $password
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
@@ -130,7 +130,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a POST request to /api/v1/users/ without an
+   * I send a POST request to /v1/users/ without an
    * email and the server sends an appropriate response and
    * does not create a user in the database.
    *
@@ -141,7 +141,7 @@ class UserRoutesTest extends TestCase
     $password = 'password99';
 
     //check that the api responds accordingly
-    $this->post('/api/v1/users/', [
+    $this->post('/v1/users/', [
       'password' => $password
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
@@ -152,7 +152,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a POST request to /api/v1/users/ without a
+   * I send a POST request to /v1/users/ without a
    * password and the server sends an appropriate response and
    * does not create a user in the database.
    *
@@ -163,7 +163,7 @@ class UserRoutesTest extends TestCase
     $email = 'doma@gmail.com';
 
     //check that the api responds accordingly
-    $this->post('/api/v1/users/', [
+    $this->post('/v1/users/', [
       'email' => $email
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
@@ -173,7 +173,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a POST request to /api/v1/users/ without an email and
+   * I send a POST request to /v1/users/ without an email and
    * password and the server sends an appropriate response and
    * does not create a user in the database.
    *
@@ -184,7 +184,7 @@ class UserRoutesTest extends TestCase
     $email = 'doma@gmail.com';
 
     //check that the api responds accordingly
-    $this->post('/api/v1/users/')->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
+    $this->post('/v1/users/')->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
         'email' => [MSG_EMAIL_REQUIRED],
         'password' => [MSG_PASSWORD_REQUIRED],
@@ -192,7 +192,7 @@ class UserRoutesTest extends TestCase
   }
 
   /**
-   * I send a POST request to /api/v1/users/ with an
+   * I send a POST request to /v1/users/ with an
    * invalid email and the server sends an appropriate response 
    * and does not create a user in the database.
    *
@@ -204,7 +204,7 @@ class UserRoutesTest extends TestCase
     $password= 'short';
 
     //check that the api responds accordingly
-    $this->post('/api/v1/users/', [
+    $this->post('/v1/users/', [
       'email' => $email,
       'password' => $password,
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
@@ -214,7 +214,7 @@ class UserRoutesTest extends TestCase
   }
 
   /**
-   * I send a POST request to /api/v1/users/ with an
+   * I send a POST request to /v1/users/ with an
    * invalid email and an invalid password and the server sends an 
    * appropriate response and does not create a user in the database.
    *
@@ -226,7 +226,7 @@ class UserRoutesTest extends TestCase
     $password= 'short';
 
     //check that the api responds accordingly
-    $this->post('/api/v1/users/', [
+    $this->post('/v1/users/', [
       'email' => $email,
       'password' => $password,
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
@@ -239,7 +239,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a PUT request to /api/v1/users/{id}/ and 
+   * I send a PUT request to /v1/users/{id}/ and 
    * the server updates the user matching the given id
    * in the database with the received data and returns 
    * the appropriate response.
@@ -253,7 +253,7 @@ class UserRoutesTest extends TestCase
 
     $this->assertNotEquals($email, $user->email);
     //check that the api responds accordingly
-    $this->put('/api/v1/users/1/', [
+    $this->put('/v1/users/1/', [
       'email' => $email,
       'password' => 'newPassword'
     ])->seeStatusCode(self::HTTP_OK)
@@ -266,7 +266,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a PUT request to /api/v1/users/{id}/ and 
+   * I send a PUT request to /v1/users/{id}/ and 
    * the server updates the user matching the given id
    * in the database with the received data and returns 
    * the appropriate response.
@@ -282,7 +282,7 @@ class UserRoutesTest extends TestCase
     $this->assertNotEquals($invalidEmail, $user->email);
 
     //check that the api responds accordingly
-    $this->put('/api/v1/users/1/', [
+    $this->put('/v1/users/1/', [
       'email' => $invalidEmail,
       'password' => 'short'
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
@@ -297,7 +297,7 @@ class UserRoutesTest extends TestCase
 
 
   /**
-   * I send a PUT request to /api/v1/users/{id}/ where id is a 
+   * I send a PUT request to /v1/users/{id}/ where id is a 
    * non-existing user id and the server responds with the
    * appropriate message.
    * 
@@ -309,13 +309,13 @@ class UserRoutesTest extends TestCase
     $invalidUserId = 'invalid';
 
     //check that the api responds accordingly
-    $this->put("/api/v1/users/$invalidUserId/", [
+    $this->put("/v1/users/$invalidUserId/", [
       'email' => 'new email',
     ])->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
   /**
-   * I send a DELETE request to /api/v1/users/{id} where {id} is a
+   * I send a DELETE request to /v1/users/{id} where {id} is a
    * valid user id and the server deletes the user from the database.
    *
    * (TODO add authentication)
@@ -325,14 +325,14 @@ class UserRoutesTest extends TestCase
   public function testCanDeleteUser(){
     $that = $this;
     $id = 1;
-    $that->delete("/api/v1/users/$id/")
+    $that->delete("/v1/users/$id/")
       ->seeStatusCode(self::HTTP_OK);
 
     $this->missingFromDatabase('users', ['id' => $id]);
   }
 
   /**
-   * I send a DELETE request to /api/v1/users/{id} where {id} is an
+   * I send a DELETE request to /v1/users/{id} where {id} is an
    * invalid user id and the server responds appropriately.
    *
    * (TODO add authentication)
@@ -342,7 +342,7 @@ class UserRoutesTest extends TestCase
   public function testDoesNotDeleteInvalidUser(){
     $that = $this;
     $id = 'invalid';
-    $that->delete("/api/v1/users/$id/")
+    $that->delete("/v1/users/$id/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 

@@ -16,7 +16,7 @@ class UserModuleRoutesTest extends TestCase
 
 
   /**
-   * I send a POST request to /api/v1/users/{id}/modules/ where
+   * I send a POST request to /v1/users/{id}/modules/ where
    * id is a valid user id with the parameter 'modules' 
    * containing a json string of an array of valid module id's and 
    * the server adds the given modules to the user and 
@@ -34,7 +34,7 @@ class UserModuleRoutesTest extends TestCase
     $numModules = count($modules);
     $modulesJson = json_encode($modules);
 
-    $this->post("/api/v1/users/$user_id/modules", [
+    $this->post("/v1/users/$user_id/modules", [
       'modules'  => $modulesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -51,7 +51,7 @@ class UserModuleRoutesTest extends TestCase
   }
 
   /**
-   * I send a DELETE request to /api/v1/users/{id}/modules/ 
+   * I send a DELETE request to /v1/users/{id}/modules/ 
    * where id is a valid user id with the parameter 'modules' 
    * containing a json string of an array of valid module id's and 
    * the server remove the selected modules from the user and
@@ -71,7 +71,7 @@ class UserModuleRoutesTest extends TestCase
     $modulesArr = $modules->toArray();
     $modulesJson = json_encode($modulesArr);
 
-    $this->delete("/api/v1/users/$id/modules", [
+    $this->delete("/v1/users/$id/modules", [
       'modules'  =>  $modulesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -89,7 +89,7 @@ class UserModuleRoutesTest extends TestCase
 
 
   /**
-   * I send a GET request to /api/v1/users/{id}/modules/ 
+   * I send a GET request to /v1/users/{id}/modules/ 
    * where id is a valid user id with
    * (TODO add authentication)
    *
@@ -100,7 +100,7 @@ class UserModuleRoutesTest extends TestCase
 
     $id = 1;
     if(User::findOrFail($id)->modules()->count() > 0){
-      $this->get("/api/v1/users/$id/modules")
+      $this->get("/v1/users/$id/modules")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [

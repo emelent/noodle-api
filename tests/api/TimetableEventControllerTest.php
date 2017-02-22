@@ -18,7 +18,7 @@ class TimetableEventRoutesTest extends TestCase
 
 
   /**
-   * I send a POST request to /api/v1/timetables/{id}/events/ where
+   * I send a POST request to /v1/timetables/{id}/events/ where
    * id is a valid timetable id with the parameter 'events' 
    * containing a json string of an array of valid event id's and 
    * the server adds the given events to the timetable and 
@@ -36,7 +36,7 @@ class TimetableEventRoutesTest extends TestCase
     $numEvents = count($events);
     $eventsJson = json_encode($events);
 
-    $this->post("/api/v1/timetables/$timetable_id/events", [
+    $this->post("/v1/timetables/$timetable_id/events", [
       'events'  => $eventsJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -53,7 +53,7 @@ class TimetableEventRoutesTest extends TestCase
   }
 
   /**
-   * I send a DELETE request to /api/v1/timetables/{id}/events/ 
+   * I send a DELETE request to /v1/timetables/{id}/events/ 
    * where id is a valid timetable id with the parameter 'events' 
    * containing a json string of an array of valid event id's and 
    * the server remove the selected events from the timetable and
@@ -73,7 +73,7 @@ class TimetableEventRoutesTest extends TestCase
     $eventsArr = $events->toArray();
     $eventsJson = json_encode($eventsArr);
 
-    $this->delete("/api/v1/timetables/$id/events", [
+    $this->delete("/v1/timetables/$id/events", [
       'events'  =>  $eventsJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -91,7 +91,7 @@ class TimetableEventRoutesTest extends TestCase
 
 
   /**
-   * I send a GET request to /api/v1/timetables/{id}/events/ 
+   * I send a GET request to /v1/timetables/{id}/events/ 
    * where id is a valid timetable id with
    * (TODO add authentication)
    *
@@ -102,7 +102,7 @@ class TimetableEventRoutesTest extends TestCase
 
     $id = 1;
     if(Timetable::findOrFail($id)->events()->count() > 0){
-      $this->get("/api/v1/timetables/$id/events")
+      $this->get("/v1/timetables/$id/events")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [
