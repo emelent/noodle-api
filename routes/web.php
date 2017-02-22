@@ -12,13 +12,14 @@
 */
 
 $app->get('/', function () use ($app) {
-    return $app->version();
+    return response()->json(['data' => "Looks like you're well ReSted"]);
 });
 
-$app->group([
-  'prefix'  =>  '/api/v1/',
-], function() use ($app){
 
+$app->group([
+  'prefix'  =>  '/v1/',
+], function() use ($app){
+  $app->post('/auth/login', 'AuthController@issueToken');
   $app->get('/', function() use($app){
     return response()->json(['data' => "Looks like you're well ReSted"]);
   });

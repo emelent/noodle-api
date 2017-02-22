@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\JWTAuth;
+
 
 class UserController extends Controller{
 
+  protected $jwt;
+
+  public function __construct(JWTAuth $jwt){
+    $this->jwt = $jwt;
+
+    $this->middleware('auth:api', ['only' => ['showAll']]);
+  }
 
 	public function show($id){
 		$user = User::find($id);
@@ -18,7 +27,7 @@ class UserController extends Controller{
 	}
 
 	public function showAll(){
-		$users = User::all()->where('id', 2);
+		$users = User::all();
 		return $this->success($users, self::HTTP_OK);
 	}
 
