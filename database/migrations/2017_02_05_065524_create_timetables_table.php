@@ -20,7 +20,7 @@ class CreateTimetablesTable extends Migration
       $table->integer('creator_id')->unsigned();
 
       $table->foreign('creator_id')->references('id')
-        ->on('users');
+        ->on('users')->onDelete('cascade');
     });
   }
 
