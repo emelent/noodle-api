@@ -25,10 +25,9 @@ class CreateUserRolesTable extends Migration
           ->on('users')->onDelete('cascade');
         $table->foreign('role_id')->references('id')
           ->on('roles')->onDelete('cascade');
-        });
 
-        //create composite key from role_id and user_id
-        $table->unique(['role_id', 'user_id']);
+      });
+
     }
 
     /**
