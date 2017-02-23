@@ -6,6 +6,7 @@ use App\User;
 use App\Module;
 use App\Timetable;
 use App\Event;
+use App\Role;
 
 const NUM_USERS = 10;
 const NUM_MODULES = 15;
@@ -58,6 +59,7 @@ class DummySeeder extends Seeder
     Module::truncate();
     Event::truncate();
     Timetable::truncate();
+    Role::truncate();
 
 
     //-- CREATE MODEL RECORDS
@@ -67,6 +69,13 @@ class DummySeeder extends Seeder
 
     //create module events
     factory(Event::class, NUM_EVENTS)->create();
+
+    //create roles
+    foreach(['user', 'admin'] as $role){
+      DB::table('roles')->insert([
+        'name'  => $role
+      ]);
+    }
 
     //create users
     factory(User::class, NUM_USERS)->create()->each(function($u){
@@ -78,6 +87,11 @@ class DummySeeder extends Seeder
           'user_id' => $u->id
         ]);
       }
+
+      DB::table('user_roles')->insert([
+        'user_id' => $u->id,
+        'role_id' => 0
+      ]);
     });
 
     //create tables
