@@ -16,6 +16,7 @@ class UserController extends Controller{
     $this->jwt = $jwt;
 
     $this->middleware('auth:api', ['only' => ['showAll']]);
+    //$this->middleware('role:editor', ['only' => ['showAll']]);
   }
 
 	public function show($id){
@@ -26,9 +27,9 @@ class UserController extends Controller{
 		return $this->success($user, self::HTTP_OK);
 	}
 
-	public function showAll(){
+	public function showAll(Request $request){
 		$users = User::all();
-		return $this->success($users, self::HTTP_OK);
+		return $this->success($request->user(), self::HTTP_OK);
 	}
 
 	public function store(Request $request){

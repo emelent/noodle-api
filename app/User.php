@@ -43,9 +43,18 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
     public function timetables(){
       return $this->belongsToMany(
         'Timetable', 
-        'user_modules', 
+        'user_timetables', 
         'user_id',
         'timetable_id'
+      );
+    }
+
+    public function roles(){
+      return $this->belongsToMany(
+        'Role',
+        'user_roles',
+        'user_id',
+        'role_id'
       );
     }
 
