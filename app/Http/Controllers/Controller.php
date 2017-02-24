@@ -14,4 +14,8 @@ class Controller extends BaseController implements Httpstatuscodes
   public function error($message, $code){
     return response()->json(['message' => $message], $code);
   }
+
+  public function isCreator($user, $model){
+    return $user->id == $model->creator_id;
+  }
 }
