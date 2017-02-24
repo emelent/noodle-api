@@ -11,3 +11,5 @@ tests/_support/_generated/
 
 storage/oauth-private.key
 storage/oauth-public.key
+
+.tags*
