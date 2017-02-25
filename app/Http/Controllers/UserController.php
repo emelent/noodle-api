@@ -15,8 +15,8 @@ class UserController extends Controller{
   public function __construct(JWTAuth $jwt){
     $this->jwt = $jwt;
 
-    $this->middleware('auth:api', ['only' => ['showAll']]);
-    //$this->middleware('role:editor', ['only' => ['showAll']]);
+    $this->middleware('auth:api', ['except'	=> ['store']]);
+    $this->middleware('role:admin', ['only' => ['showAll']]);
   }
 
 	public function show($id){
@@ -29,15 +29,15 @@ class UserController extends Controller{
 
 	public function showAll(Request $request){
 		$users = User::all();
-		return $this->success($request->user(), self::HTTP_OK);
+		return $this->success($users, self::HTTP_OK);
 	}
 
 	public function store(Request $request){
 		$this->validateRequest($request);
 		$user = User::create([
-					'email' => $request->get('email'),
-					'password'=> Hash::make($request->get('password'))
-				]);
+			'email' => $request->get('email'),
+			'password'=> Hash::make($request->get('password'))
+		]);
 		return $this->success("The user with email {$user->email} has been created.", self::HTTP_CREATED);
 	}
 
@@ -45,6 +45,10 @@ class UserController extends Controller{
 		$user = User::find($id);
 		if(!$user){
 			return $this->error("The user with {$id} doesn't exist", self::HTTP_NOT_FOUND);
+		}
+
+		if($user != $request->user()){
+			return $this->error("The user with {$id} doesn't exist", self::HTTP_UNAUTHORIZED);
 		}
 		$this->validateRequest($request);
 		$user->email 		= $request->get('email');
