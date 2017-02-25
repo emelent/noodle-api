@@ -73,7 +73,7 @@ class DummySeeder extends Seeder
     //create roles
     foreach(['user', 'admin'] as $role){
       DB::table('roles')->insert([
-        'name'  => $role
+        'role'  => $role
       ]);
     }
 
