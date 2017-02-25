@@ -47,8 +47,8 @@ class UserController extends Controller{
 			return $this->error("The user with {$id} doesn't exist", self::HTTP_NOT_FOUND);
 		}
 
-		if($user != $request->user()){
-			return $this->error("The user with {$id} doesn't exist", self::HTTP_UNAUTHORIZED);
+		if($id != $request->user()->id){
+			return $this->error("Unauthorized.", self::HTTP_UNAUTHORIZED);
 		}
 		$this->validateRequest($request);
 		$user->email 		= $request->get('email');
