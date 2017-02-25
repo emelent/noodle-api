@@ -37,7 +37,7 @@ $app->group([
 
     /*user module routes*/
     $app->group([
-      'prefix'  =>  '/{user_id}/modules/'
+      'prefix'  =>  '/{user_id}/modules/',
     ], function() use($app){
       $app->get('/', 'UserModuleController@showAll');
       $app->delete('/', 'UserModuleController@remove');
@@ -58,8 +58,8 @@ $app->group([
   $app->group([
     'prefix'  =>  'events/',
   ], function() use ($app){
-    $app->get('/', 'EventController@showAll');
     $app->post('/', 'EventController@store');
+    $app->get('/', 'EventController@showAll');
     $app->get('/{event_id}', 'EventController@show');
     $app->put('/{event_id}', 'EventController@update');
     $app->delete('/{event_id}', 'EventController@destroy');
@@ -69,8 +69,8 @@ $app->group([
   $app->group([
     'prefix'  =>  'modules/',
   ], function() use ($app){
-    $app->get('/', 'ModuleController@showAll');
     $app->post('/', 'ModuleController@store');
+    $app->get('/', 'ModuleController@showAll');
     $app->get('/{module_id}', 'ModuleController@show');
     $app->put('/{module_id}', 'ModuleController@update');
     $app->delete('/{module_id}', 'ModuleController@destroy');
@@ -79,16 +79,18 @@ $app->group([
   /*timetable routes*/
   $app->group([
     'prefix'  =>  'timetables/',
+    'middleware'  => 'auth:api',
   ], function() use ($app){
-    $app->get('/', 'TimetableController@showAll');
     $app->post('/', 'TimetableController@store');
+    $app->get('/', 'TimetableController@showAll');
     $app->get('/{timetable_id}', 'TimetableController@show');
     $app->put('/{timetable_id}', 'TimetableController@update');
     $app->delete('/{module_id}', 'TimetableController@destroy');
 
     /*timetable event routes*/
     $app->group([
-      'prefix'  =>  '/{timetable_id}/events/'
+      'prefix'  =>  '/{timetable_id}/events/',
+      'middleware'  => 'auth:api',
     ], function() use($app){
       $app->get('/', 'TimetableEventController@showAll');
       $app->delete('/', 'TimetableEventController@remove');
