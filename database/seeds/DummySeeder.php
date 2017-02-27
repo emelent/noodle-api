@@ -87,13 +87,17 @@ class DummySeeder extends Seeder
           'user_id' => $u->id
         ]);
       }
-      //make first user admin
-      $role_id = ($key == 0)? 2: 1;
 
       DB::table('user_roles')->insert([
         'user_id' => $u->id,
-        'role_id' => $role_id
+        'role_id' => 1
       ]);
+      if($key == 0){
+        DB::table('user_roles')->insert([
+          'user_id' => $u->id,
+          'role_id' => 2
+        ]);
+      }
     });
 
     //create tables
