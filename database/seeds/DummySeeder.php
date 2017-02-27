@@ -78,7 +78,7 @@ class DummySeeder extends Seeder
     }
 
     //create users
-    factory(User::class, NUM_USERS)->create()->each(function($u){
+    factory(User::class, NUM_USERS)->create()->each(function($u, $key){
       $numSelectedModules = rand(2, NUM_MODULES);
       //add random modules for user
       for($i = 0; $i < $numSelectedModules; $i++){
@@ -87,10 +87,12 @@ class DummySeeder extends Seeder
           'user_id' => $u->id
         ]);
       }
+      //make first user admin
+      $role_id = ($key == 0)? 2: 1;
 
       DB::table('user_roles')->insert([
         'user_id' => $u->id,
-        'role_id' => 0
+        'role_id' => $role_id
       ]);
     });
 
