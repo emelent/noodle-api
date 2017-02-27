@@ -19,7 +19,7 @@ class CreateModulesTable extends Migration
       $table->string('name');
       $table->text('description');
       $table->string('period');
-      $table->integer('type');
+      $table->boolean('postgrad');
       $table->timestamps();
     });
   }

@@ -41,7 +41,7 @@ $factory->define(App\Module::class, function(Faker\Generator $faker){
     'name'  => $faker->word,
     'code'  => $faker->bothify('???###'),
     'description' => $faker->realText(),
-    'type'  => rand(0,2),
+    'postgrad'  => $faker->boolean,
     'period'  => $faker->randomElement(['S1','S2','Q1','Q2','Q3','Q4'])
   ];
 });
