@@ -6,11 +6,11 @@ use App\Module;
 
 const MODULE_FIELDS = [
   'id', 'code','description', 
-  'name', 'type', 'period'
+  'name', 'postgrad', 'period'
 ];
 
 const MSG_CODE_REQUIRED = '';
-const MSG_TYPE_REQUIRED = '';
+const MSG_POSTGRAD_REQUIRED = '';
 const MSG_DESC_REQUIRED = '';
 const MSG_NAME_REQUIRED = '';
 const MSG_PERIOD_REQUIRED = '';
@@ -23,7 +23,7 @@ class ModuleControllerTest extends ModelControllerTestCase
   protected $modelRoutePrefix = '/v1/modules';
   protected $modelFields = [
     'id', 'code','description', 
-    'name', 'type', 'period'
+    'name', 'postgrad', 'period'
   ];
 
   /**
@@ -43,7 +43,7 @@ class ModuleControllerTest extends ModelControllerTestCase
       'description' => 'Description of modulo',
       'code'  => $code,
       'period'  => 'Q1',
-      'type'  => 0,
+      'postgrad'  => 0,
     ])->seeStatusCode(self::HTTP_CREATED)
       ->seeJson([
         'data' => "The module with code '$code' has been created."
@@ -73,7 +73,7 @@ class ModuleControllerTest extends ModelControllerTestCase
         'code' => [MSG_CODE_REQUIRED],
         'name' => [MSG_NAME_REQUIRED],
         'period' => [MSG_PERIOD_REQUIRED],
-        'type' => [MSG_TYPE_REQUIRED],
+        'postgrad' => [MSG_postgrad_REQUIRED],
         'description' => [MSG_DESC_REQUIRED]
       ]);
 
