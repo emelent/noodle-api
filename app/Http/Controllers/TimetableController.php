@@ -9,6 +9,8 @@ class TimetableController extends ModelController{
 
   public function __construct(){
     parent::__construct(Timetable::class);
+    $this->middleware('auth:api', ['except'	=> ['show','showAll']]);
+    $this->middleware('role:user', ['except'	=> ['show','showAll']]);
   }
 
 	public function store(Request $request){
