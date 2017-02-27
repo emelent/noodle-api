@@ -57,25 +57,6 @@ class UserControllerTest extends TestCase
       ->seeStatusCode(self::HTTP_UNAUTHORIZED);
   }
 
-  /**
-   * I send a GET request to /v1/users/{id} where {id} is the
-   * user id of the currently authenticated user and the server 
-   * returns the user with a matching id. 
-   *
-   * @return void
-   */
-  public function testCanShowUserCurrentAuthenticatedById(){
-    $id = 2;
-    $this->actingAs(User::findOrFail($id))->get("/v1/users/$id/")
-      ->seeStatusCode(self::HTTP_OK)
-      ->seeJsonStructure([
-        'data'  => [
-          'email',
-          'id'
-        ]
-      ]);
-  }
-
 
   /**
    * I send a GET request to /v1/users/{id} where {id} is the
@@ -106,16 +87,9 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testCanShowUserById(){
-    $id = 1;
-    $this->actingAs(User::findOrFail($id))->get("/v1/users/$id/")
-      ->seeStatusCode(self::HTTP_OK)
-      ->seeJsonStructure([
-        'data'  => [
-          'email',
-          'id'
-        ]
-      ]);
+  public function testDoesNotShowUserWhenNotAuthenticated(){
+    $this->get('/v1/users/1/')
+      ->seeStatusCode(self::HTTP_UNAUTHORIZED);
   }
 
   /**
@@ -131,7 +105,6 @@ class UserControllerTest extends TestCase
     $this->actingAs(User::findOrFail(1))->get("/v1/users/$invalidUserId/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
-
   /**
    * I send a POST request to /v1/users/ with valid
    * data and the server creates a new user in the database.
