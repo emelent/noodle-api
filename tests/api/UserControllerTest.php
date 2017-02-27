@@ -17,12 +17,12 @@ class UserControllerTest extends TestCase
 
 
   /**
-   * I send a GET request to /v1/users/ and the server
-   * returns a list of users. (TODO add authentication)
+   * I send a GET request to /v1/users/ as an authenticated
+   * admin user and the server returns a list of users. 
    *
    * @return void
    */
-  public function testCanShowAllUsers(){
+  public function testCanShowAllUsersWhenAdminUser(){
     $this->actingAs(User::findOrFail(1))->get('/v1/users/')
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
@@ -31,6 +31,69 @@ class UserControllerTest extends TestCase
             'email',
             'id'
           ]
+        ]
+      ]);
+  }
+
+  /**
+   * I send a GET request to /v1/users/ as an authenticated
+   * user and the server should not respond appropriately. 
+   *
+   * @return void
+   */
+  public function testCanShowAllUsersWhenNotAnAdminUser(){
+    $this->actingAs(User::findOrFail(2))->get('/v1/users/')
+      ->seeStatusCode(self::HTTP_UNAUTHORIZED);
+  }
+
+
+  /**
+   * I send a GET request to /v1/users/ as an unauthenticated
+   * user and the server should not respond appropriately. 
+   *
+   * @return void
+   */
+  public function testCanShowAllUsersWhenNotAUser(){
+    $this->actingAs(User::findOrFail(2))->get('/v1/users/')
+      ->seeStatusCode(self::HTTP_UNAUTHORIZED);
+  }
+
+  /**
+   * I send a GET request to /v1/users/{id} where {id} is the
+   * user id of the currently authenticated user and the server 
+   * returns the user with a matching id. 
+   *
+   * @return void
+   */
+  public function testCanShowUserCurrentAuthenticatedById(){
+    $id = 2;
+    $this->actingAs(User::findOrFail($id))->get("/v1/users/$id/")
+      ->seeStatusCode(self::HTTP_OK)
+      ->seeJsonStructure([
+        'data'  => [
+          'email',
+          'id'
+        ]
+      ]);
+  }
+
+
+  /**
+   * I send a GET request to /v1/users/{id} where {id} is the
+   * user id of the currently authenticated user and the server 
+   * returns the user with a matching id. 
+   *
+   * @return void
+   */
+  public function testCanShowUserAnyUserByIdAsAdmin(){
+    $id = 1;
+    
+    $this->actingAs(User::findOrFail($id))->get("/v1/users/5/")
+      ->seeStatusCode(self::HTTP_OK)
+      ->seeJsonStructure([
+        'data'  => [
+          'email',
+          'id'
         ]
       ]);
   }
@@ -45,7 +108,8 @@ class UserControllerTest extends TestCase
    * @return void
    */
   public function testCanShowUserById(){
-    $this->actingAs(User::findOrFail(1))->get('/v1/users/1/')
+    $id = 1;
+    $this->actingAs(User::findOrFail($id))->get("/v1/users/$id/")
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -54,7 +118,6 @@ class UserControllerTest extends TestCase
         ]
       ]);
   }
-
 
   /**
    * I send a GET request to /v1/users/{id} where id is
