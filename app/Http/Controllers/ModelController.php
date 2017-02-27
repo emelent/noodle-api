@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 class ModelController extends Controller{
 
   protected $modelClass;
-
+  protected $updateRules;
+  protected $storeRules;
+  
   public function __construct($modelClass){
     $this->modelClass = $modelClass;
   }
@@ -42,5 +44,50 @@ class ModelController extends Controller{
 		}
 		$model->delete();
 		return $this->success("The {$lowerName} has been deleted.", self::HTTP_OK);
+	}
+
+	public function update(Request $request, $id){
+		$cName = $this->modelClass;
+    $lowerName = strtolower($cName);
+		$model = $cName::find($id);
+		if(!$model){
+			return $this->error("The $lowerName with $id doesn't exist", self::HTTP_NOT_FOUND);
+		}
+
+		$this->validateUpdateRequest($request);
+
+		//update values
+		$fields = $request->all();
+		$fillables = $model->getFillable();
+		$validFields = array_intersect(array_keys($fields), $fillables);
+		foreach($validFields as $field){
+			$model->$field = $fields[$field];
+		}
+
+		$model->save();
+		return $this->success("The $lowerName has been updated.", self::HTTP_OK);
+	}
+
+
+	public function store(Request $request){
+		$cName = $this->modelClass;
+    $lowerName = strtolower($cName);
+		$this->validateUpdateRequest($request);
+
+		$fields = (new $cName())->getFillable();
+		$data = [];
+		foreach($fields as $field){
+			$data[$field] = $request->get($field);
+		}
+		$model = $cName::create($data);
+		return $this->success("The $lowerName has been created.", self::HTTP_CREATED);
+	}
+
+	public function validateUpdateRequest(Request $request){
+		$this->validate($request, $this->updateRules);
+	}
+
+	public function validateStoreRequest(Request $request){
+		$this->validate($request, $this->storeRules);
 	}
 }
