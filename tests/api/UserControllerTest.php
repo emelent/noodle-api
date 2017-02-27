@@ -9,7 +9,7 @@ const MSG_INVALID_PASSWORD = 'The password must be at least 6 characters.';
 const MSG_EMAIL_REQUIRED = 'The email field is required.';
 const MSG_PASSWORD_REQUIRED = 'The password field is required.';
 
-class UserRoutesTest extends TestCase
+class UserControllerTest extends TestCase
 {
 
   use DatabaseTransactions;
@@ -23,8 +23,7 @@ class UserRoutesTest extends TestCase
    * @return void
    */
   public function testCanShowAllUsers(){
-    $that = $this;
-    $that->get('/v1/users/')
+    $this->actingAs(User::findOrFail(1))->get('/v1/users/')
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -46,8 +45,7 @@ class UserRoutesTest extends TestCase
    * @return void
    */
   public function testCanShowUserById(){
-    $that = $this;
-    $that->get('/v1/users/1/')
+    $this->actingAs(User::findOrFail(1))->get('/v1/users/1/')
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -67,9 +65,8 @@ class UserRoutesTest extends TestCase
    * @return void
    */
   public function testDoesNotShowUserWithAnInvalidId(){
-    $that = $this;
     $invalidUserId = 'invalid';
-    $that->get("/v1/users/$invalidUserId/")
+    $this->actingAs(User::findOrFail(1))->get("/v1/users/$invalidUserId/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
@@ -253,7 +250,7 @@ class UserRoutesTest extends TestCase
 
     $this->assertNotEquals($email, $user->email);
     //check that the api responds accordingly
-    $this->put('/v1/users/1/', [
+    $this->actingAs(User::findOrFail(1))->put('/v1/users/1/', [
       'email' => $email,
       'password' => 'newPassword'
     ])->seeStatusCode(self::HTTP_OK)
@@ -282,7 +279,7 @@ class UserRoutesTest extends TestCase
     $this->assertNotEquals($invalidEmail, $user->email);
 
     //check that the api responds accordingly
-    $this->put('/v1/users/1/', [
+    $this->actingAs(User::findOrFail(1))->put('/v1/users/1/', [
       'email' => $invalidEmail,
       'password' => 'short'
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
@@ -309,7 +306,7 @@ class UserRoutesTest extends TestCase
     $invalidUserId = 'invalid';
 
     //check that the api responds accordingly
-    $this->put("/v1/users/$invalidUserId/", [
+    $this->actingAs(User::findOrFail(1))->put("/v1/users/$invalidUserId/", [
       'email' => 'new email',
     ])->seeStatusCode(self::HTTP_NOT_FOUND);
   }
@@ -325,7 +322,7 @@ class UserRoutesTest extends TestCase
   public function testCanDeleteUser(){
     $that = $this;
     $id = 1;
-    $that->delete("/v1/users/$id/")
+    $that->actingAs(User::findOrFail(1))->delete("/v1/users/$id/")
       ->seeStatusCode(self::HTTP_OK);
 
     $this->missingFromDatabase('users', ['id' => $id]);
@@ -342,7 +339,7 @@ class UserRoutesTest extends TestCase
   public function testDoesNotDeleteInvalidUser(){
     $that = $this;
     $id = 'invalid';
-    $that->delete("/v1/users/$id/")
+    $that->actingAs(User::findOrFail(1))->delete("/v1/users/$id/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
