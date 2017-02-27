@@ -24,7 +24,7 @@ class Event extends Model
 
     public function timetables(){
       return $this->belongsToMany(
-        'Timetable',
+        Timetable::class,
         'timetable_events',
         'event_id',
         'timetable_id'

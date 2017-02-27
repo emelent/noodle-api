@@ -33,7 +33,7 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
 
     public function modules(){
       return $this->belongsToMany(
-        'Module', 
+        Module::class, 
         'user_modules', 
         'user_id',
         'module_id'
@@ -42,7 +42,7 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
 
     public function timetables(){
       return $this->belongsToMany(
-        'Timetable', 
+        Timetable::class, 
         'user_timetables', 
         'user_id',
         'timetable_id'
@@ -51,7 +51,7 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
 
     public function roles(){
       return $this->belongsToMany(
-        'Role',
+        Role::class,
         'user_roles',
         'user_id',
         'role_id'

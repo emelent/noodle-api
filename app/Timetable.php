@@ -17,12 +17,12 @@ class Timetable extends Model
     ];
 
     public function creator(){
-      return $this->belongsTo('User');
+      return $this->belongsTo(User::class);
     }
 
     public function events(){
       return $this->belongsToMany(
-        'Event',
+        Event::class,
         'timetable_events',
         'timetable_id',
         'event_id'
@@ -31,7 +31,7 @@ class Timetable extends Model
 
     public function users(){
       return $this->belongsToMany(
-        'User',
+        User::class,
         'user_timetables',
         'timetable_id',
         'user_id'

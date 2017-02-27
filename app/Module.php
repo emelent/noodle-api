@@ -14,12 +14,12 @@ class Module extends Model
      */
     protected $fillable = [
       'name', 'description', 'code',
-      'type', 'period'
+      'postgrad', 'period'
     ];
 
     public function users(){
       return $this->belongsToMany(
-        'User', 
+        User::class, 
         'user_modules', 
         'module_id',
         'user_id'
