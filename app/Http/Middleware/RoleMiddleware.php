@@ -13,8 +13,8 @@ class RoleMiddleware
    * @param  \Closure  $next
    * @return mixed
    */
-  public function handle($request, Closure $next, $role){
-    if($request->user()->roles()->where('role', $role)->isEmpty()){
+  public function handle($request, Closure $next, $name){
+    if(!$request->user()->roles()->where('role', $name)->first()){
       return response()->json(['message' => 'Unauthorized.'], 401);
     }
 
