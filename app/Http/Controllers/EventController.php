@@ -9,13 +9,13 @@ class EventController extends ModelController{
 
   public function __construct(){
     parent::__construct(Event::class);
+    $this->middleware('auth:api', ['except' => [
+    	'show', 'showAll'
+    ]]);
   }
 
 	public function store(Request $request){
 		$this->validateRequest($request);
-
-    //TODO get current user ID
-    $user_id = 1; // oh, you dirty, dirty line of code
 
 		$event = Event::create([
       'name' => $request->get('name'),
@@ -25,9 +25,10 @@ class EventController extends ModelController{
       'end' => $request->get('end'),
       'language' => $request->get('language'),
       'group' => $request->get('group'),
-      'creator_id' => $user_id,
+      'creator_id' => $request->user()->id,
       'module_id' => $request->get('module_id'),
     ]);
+
 		return $this->success("The event has been created.", self::HTTP_CREATED);
 	}
 
@@ -36,6 +37,11 @@ class EventController extends ModelController{
 		if(!$event){
 			return $this->error("The event with {$id} doesn't exist", self::HTTP_NOT_FOUND);
 		}
+
+		if(!$event->creator_id != $request->user()->id){
+			return $this->error("Unauthorized.", self::HTTP_UNAUTHORIZED);
+		}
+
 		$this->validateRequest($request);
 		$event->name = $request->get('name');
 		$event->date = $request->get('date');
