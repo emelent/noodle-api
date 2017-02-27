@@ -37,24 +37,23 @@ class UserControllerTest extends TestCase
 
   /**
    * I send a GET request to /v1/users/ as an authenticated
-   * user and the server should not respond appropriately. 
+   * non-admin user and the server returns a list of users. 
    *
    * @return void
    */
-  public function testCanShowAllUsersWhenNotAnAdminUser(){
+  public function testDoesNotShowAllUsersWhenNotAnAdminUser(){
     $this->actingAs(User::findOrFail(2))->get('/v1/users/')
       ->seeStatusCode(self::HTTP_UNAUTHORIZED);
   }
 
-
   /**
    * I send a GET request to /v1/users/ as an unauthenticated
-   * user and the server should not respond appropriately. 
+   * user and the server returns a list of users. 
    *
    * @return void
    */
-  public function testCanShowAllUsersWhenNotAUser(){
-    $this->actingAs(User::findOrFail(2))->get('/v1/users/')
+  public function testDoesNotShowAllUsersWhenNotAuthenticated(){
+    $this->get('/v1/users/')
       ->seeStatusCode(self::HTTP_UNAUTHORIZED);
   }
 
@@ -85,8 +84,8 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testCanShowUserAnyUserByIdAsAdmin(){
-    $id = 1;
+  public function testCanShowUserWhenAuthenticated(){
+    $id = 2;
     
     $this->actingAs(User::findOrFail($id))->get("/v1/users/5/")
       ->seeStatusCode(self::HTTP_OK)
