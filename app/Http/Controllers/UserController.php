@@ -5,35 +5,28 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\JWTAuth;
 
 
-class UserController extends Controller{
+class UserController extends ModelController{
 
-  protected $jwt;
+	protected $storeRules = [
+		'email' => 'required|email|unique:users', 
+		'password' => 'required|min:6'
+	];
 
-  public function __construct(JWTAuth $jwt){
-    $this->jwt = $jwt;
+	protected $updateRules = [
+		'email' => 'email|unique:users', 
+		'password' => 'min:6'
+	];
 
+  public function __construct(){
+  	parent::__construct(User::class);
     $this->middleware('auth:api', ['except'	=> ['store']]);
     $this->middleware('role:admin', ['only' => ['showAll']]);
   }
 
-	public function show($id){
-		$user = User::find($id);
-		if(!$user){
-			return $this->error("The user with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
-		}
-		return $this->success($user, self::HTTP_OK);
-	}
-
-	public function showAll(Request $request){
-		$users = User::all();
-		return $this->success($users, self::HTTP_OK);
-	}
-
 	public function store(Request $request){
-		$this->validateRequest($request);
+		$this->validateStoreRequest($request);
 		$user = User::create([
 			'email' => $request->get('email'),
 			'password'=> Hash::make($request->get('password'))
@@ -50,27 +43,12 @@ class UserController extends Controller{
 		if($id != $request->user()->id){
 			return $this->error("Unauthorized.", self::HTTP_UNAUTHORIZED);
 		}
-		$this->validateRequest($request);
+
+		$this->validateUpdateRequest($request);
 		$user->email 		= $request->get('email');
 		$user->password 	= Hash::make($request->get('password'));
 		$user->save();
+		
 		return $this->success("The user with id {$user->id} has been updated.", self::HTTP_OK);
-	}
-
-	public function destroy($id){
-		$user = User::find($id);
-		if(!$user){
-			return $this->error("The user with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
-		}
-		$user->delete();
-		return $this->success("The user has been deleted.", self::HTTP_OK);
-	}
-
-	public function validateRequest(Request $request){
-		$rules = [
-			'email' => 'required|email|unique:users', 
-			'password' => 'required|min:6'
-		];
-		$this->validate($request, $rules);
 	}
 }
