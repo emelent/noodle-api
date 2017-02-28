@@ -41,7 +41,7 @@ class UserController extends ModelController{
 		}
 
 		if($id != $request->user()->id){
-			return $this->error("Unauthorized.", self::HTTP_UNAUTHORIZED);
+			return $this->error("Not permitted.", self::HTTP_UNAUTHORIZED);
 		}
 
 		$this->validateUpdateRequest($request);
