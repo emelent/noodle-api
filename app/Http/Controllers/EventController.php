@@ -47,7 +47,7 @@ class EventController extends ModelController{
 		if($event->creator_id != $request->user()->id){
 			return $this->error("Not permitted.", self::HTTP_UNAUTHORIZED);
 		}
-		parent::update($request, $id);
+		return parent::update($request, $id);
 	}
 
 
@@ -59,6 +59,6 @@ class EventController extends ModelController{
 		if($event->creator_id != $request->user()->id){
 			return $this->error("Not permitted.", self::HTTP_UNAUTHORIZED);
 		}
-		parent::destroy($request, $id);
+		return parent::destroy($request, $id);
 	}
 }
