@@ -35,7 +35,7 @@ class ModelController extends Controller{
 		return $this->success($model, self::HTTP_OK);
 	}
 
-	public function destroy($id){
+	public function destroy(Request $request, $id){
     $cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
