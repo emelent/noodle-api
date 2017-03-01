@@ -3,6 +3,8 @@
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
+use App\User;
+
 
 class ModelControllerTestCase extends TestCase
 {
@@ -13,7 +15,15 @@ class ModelControllerTestCase extends TestCase
   protected $tableName = null;
   protected $modelRoutePrefix = null;
   protected $modelFields = [];
-  
+  protected $admin = null;
+  protected $user = null;
+
+  function __construct()
+  {
+    $this->admin = User::findOrFail(1);
+    $this->user = User::findOrFail(2);
+  }
+
   /**
    * Seems to fix request issue when running this with codeception
    * instead of phpunit. This just sends a get request, without

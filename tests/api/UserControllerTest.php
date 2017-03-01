@@ -278,7 +278,7 @@ class UserControllerTest extends TestCase
    * 
    * @return void
    */
-  public function testCan_updateExistingUserWithValidData(){
+  public function testCanUpdateExistingUserWithValidData(){
     $this->get('/');
     $user = User::findOrFail(1);
     $email = 'mynewemail@extranew.com';

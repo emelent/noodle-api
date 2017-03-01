@@ -4,7 +4,6 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Event;
 
-
 const MSG_DAY_REQUIRED      = '';
 const MSG_START_REQUIRED    = '';
 const MSG_END_REQUIRED      = '';
@@ -32,7 +31,6 @@ class EventControllerTest extends ModelControllerTestCase
    * I send a POST request to /v1/events/ with valid
    * data and the server creates a new event in the database.
    *
-   * (TODO add authentication)
    *
    * @return void
    */
@@ -42,7 +40,7 @@ class EventControllerTest extends ModelControllerTestCase
     $name = 'Lesson 5';
     $group = null;
     $module_id = null;
-
+    
     $this->post("{$this->modelRoutePrefix}/", [
       'name' => $name,
       'day'  => 1,
@@ -50,7 +48,6 @@ class EventControllerTest extends ModelControllerTestCase
       'end'   =>  date("Y-m-d H:i:s", strtotime('+1 hours')),
       'date'  => null,
       'group' => $group,
-      'creator_id'  => null,
       'module_id' => $module_id
     ])->seeStatusCode(self::HTTP_CREATED)
       ->seeJson([
