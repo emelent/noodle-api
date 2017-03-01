@@ -30,23 +30,29 @@ class ModelController extends Controller{
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
 		if(!$model){
-			return $this->error("The ${lowerName} with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
+			return $this->error("The $lowerName with $id doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 		return $this->success($model, self::HTTP_OK);
 	}
 
-	public function destroy(Request $request, $id){
+	public function destroy(Request $request, $id, $validateOwnership){
     $cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
 		if(!$model){
-			return $this->error("The {$lowerName} with {$id} doesn't exist.", self::HTTP_NOT_FOUND);
+			return $this->error("The $lowerName with $id doesn't exist.", self::HTTP_NOT_FOUND);
 		}
+
+		if($validateOwnership){
+			if($model->$key != $value)
+				return $this->error('Not permitted.', self::HTTP_FORBIDDEN);
+		}
+
 		$model->delete();
-		return $this->success("The {$lowerName} has been deleted.", self::HTTP_OK);
+		return $this->success("The $lowerName has been deleted.", self::HTTP_OK);
 	}
 
-	public function update(Request $request, $id){
+	public function update(Request $request, $id, $validateOwnership=false){
 		$cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
@@ -54,6 +60,10 @@ class ModelController extends Controller{
 			return $this->error("The $lowerName with $id doesn't exist", self::HTTP_NOT_FOUND);
 		}
 
+		if($validateOwnership){
+			if($model->$key != $value)
+				return $this->error('Not permitted.', self::HTTP_FORBIDDEN);
+		}
 		$this->validateUpdateRequest($request);
 
 		//update values
@@ -72,7 +82,7 @@ class ModelController extends Controller{
 	public function store(Request $request){
 		$cName = $this->modelClass;
     $lowerName = strtolower($cName);
-		$this->validateUpdateRequest($request);
+		$this->validateStoreRequest($request);
 
 		$fields = (new $cName())->getFillable();
 		$data = [];
@@ -89,5 +99,39 @@ class ModelController extends Controller{
 
 	public function validateStoreRequest(Request $request){
 		$this->validate($request, $this->storeRules);
+	}
+
+	public function validateKey($id, $key, $value, $msg, $code){
+		$cName = $this->modelClass;
+    $lowerName = strtolower($cName);
+		$model = $cName::find($id);
+
+		if(!$model){
+			return $this->error("The $lowerName with $id doesn't exist", self::HTTP_NOT_FOUND);
+		}
+
+		if($model->$key == $value){
+			return true;
+		}
+
+		return $this->error($msg, $code);
+	}
+
+	public function validateOwnership($request, $id, $key='creator_id'){
+		return $this->validateKey(
+			$id, 
+			$key, 
+			$request->user()->id,
+			'Not permitted.',
+			self::HTTP_FORBIDDEN
+		);
+	}
+
+	public function isAdmin($user)
+	{
+		if(!$user)
+			return null;
+		
+		return $user->roles()->where('role', 'admin')->get() != null;
 	}
 }

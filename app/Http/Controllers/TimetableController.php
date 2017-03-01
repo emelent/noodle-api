@@ -22,13 +22,9 @@ class TimetableController extends ModelController{
 	}
 
 	public function destroy(Request $request, $id){
-		$table = Timetable::find($id);
-		if(!$table){
-			return $this->error("The timetable with $id doesn't exist", self::HTTP_NOT_FOUND);
-		}
-
-		if($table->creator_id == $request->user()->id){
-			return $this->error('Not permitted.', self::HTTP_UNAUTHORIZED);
+		$result = $this->validateOwnership($request, $id);
+		if($result != true){
+			return $result;
 		}
 
 		return parent::destroy($request, $id);

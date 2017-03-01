@@ -40,25 +40,20 @@ class EventController extends ModelController{
 
 
 	public function update(Request $request, $id){
-		$event = Event::find($id);
-		if(!$event){
-			return $this->error("The event with $id doesn't exist", self::HTTP_NOT_FOUND);
-		}
-		if($event->creator_id != $request->user()->id){
-			return $this->error("Not permitted.", self::HTTP_UNAUTHORIZED);
-		}
-		return parent::update($request, $id);
+		return parent::update($request, $id, true);
 	}
 
+	public function store(Request $request)
+	{
+		$user = $request->user();
+		$request->input('creator_id', $user->id);
+		if($request->input('creator_id') != $user->id){
+			return $this->error('Invalid creator_id.', self::HTTP_UNPROCESSABLE_ENTITY);
+		}
+		return parent::store($request);
+	}
 
 	public function destroy(Request $request, $id){
-		$event = Event::find($id);
-		if(!$event){
-			return $this->error("The event with $id doesn't exist", self::HTTP_NOT_FOUND);
-		}
-		if($event->creator_id != $request->user()->id){
-			return $this->error("Not permitted.", self::HTTP_UNAUTHORIZED);
-		}
-		return parent::destroy($request, $id);
+		return parent::destroy($request, $id, true);
 	}
 }

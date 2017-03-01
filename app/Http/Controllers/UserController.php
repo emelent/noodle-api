@@ -40,8 +40,9 @@ class UserController extends ModelController{
 			return $this->error("The user with {$id} doesn't exist", self::HTTP_NOT_FOUND);
 		}
 
-		if($id != $request->user()->id){
-			return $this->error("Not permitted.", self::HTTP_UNAUTHORIZED);
+		//can only update current user unless current user is admin 
+		if($id != $request->user()->id && !$this->isAdmin($request->user())){
+			return $this->error("Not permitted.", self::HTTP_FORBIDDEN);
 		}
 
 		$this->validateUpdateRequest($request);
