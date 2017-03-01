@@ -285,7 +285,7 @@ class UserControllerTest extends TestCase
 
     $this->assertNotEquals($email, $user->email);
     //check that the api responds accordingly
-    $this->actingAs(User::findOrFail(1))->put('/v1/users/1/', [
+    $this->actingAs($user)->put('/v1/users/1/', [
       'email' => $email,
       'password' => 'newPassword'
     ])->seeStatusCode(self::HTTP_OK)
