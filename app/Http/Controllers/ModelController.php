@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
  * Base Model Controller class which implements generic CRUD
  * endpoint behaviour.
  */
-class ModelController extends Controller{
+abstract class ModelController extends Controller{
 
   protected $modelClass;
   protected $updateRules;
@@ -18,14 +18,36 @@ class ModelController extends Controller{
     $this->modelClass = $modelClass;
   }
 
-	public function showAll(){
+  public function showAll(Request $request){
+  	return $this->showAllAction();
+  }
+
+  public function show(Request $request, $id){
+  	return $this->showAction($request, $id);
+  }
+
+  public function update(Request $request, $id)
+  {
+  	return $this->updateAction($request, $id);
+  }
+
+  public function store(Request $request)
+  {
+  	return $this->storeAction($request);
+  }
+
+  public function destroy(Request $request, $id){
+  	return $this->destroyAction($request, $id);
+  }
+
+	protected function showAllAction(){
     //TODO implement search
     $cName = $this->modelClass;
 		$models = $cName::all();
 		return $this->success($models, self::HTTP_OK);
 	}
 
-	public function show($id){
+	protected function showAction($request, $id){
     $cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
@@ -35,7 +57,7 @@ class ModelController extends Controller{
 		return $this->success($model, self::HTTP_OK);
 	}
 
-	public function destroy(Request $request, $id, $validateOwnership){
+	protected function destroyAction($request, $id, $validateOwnership=true){
     $cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
@@ -43,8 +65,8 @@ class ModelController extends Controller{
 			return $this->error("The $lowerName with $id doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 
-		if($validateOwnership){
-			if($model->$key != $value)
+		if($validateOwnership && !isAdmin($request->user())){
+			if($model->creator_id != $request->user()->id)
 				return $this->error('Not permitted.', self::HTTP_FORBIDDEN);
 		}
 
@@ -52,7 +74,7 @@ class ModelController extends Controller{
 		return $this->success("The $lowerName has been deleted.", self::HTTP_OK);
 	}
 
-	public function update(Request $request, $id, $validateOwnership=false){
+	protected function updateAction($request, $id, $validateOwnership=false){
 		$cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
@@ -79,7 +101,7 @@ class ModelController extends Controller{
 	}
 
 
-	public function store(Request $request){
+	protected function storeAction($request){
 		$cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$this->validateStoreRequest($request);
@@ -93,15 +115,15 @@ class ModelController extends Controller{
 		return $this->success("The $lowerName has been created.", self::HTTP_CREATED);
 	}
 
-	public function validateUpdateRequest(Request $request){
+	protected function validateUpdateRequest(Request $request){
 		$this->validate($request, $this->updateRules);
 	}
 
-	public function validateStoreRequest(Request $request){
+	protected function validateStoreRequest(Request $request){
 		$this->validate($request, $this->storeRules);
 	}
 
-	public function validateKey($id, $key, $value, $msg, $code){
+	protected function validateKey($id, $key, $value, $msg, $code){
 		$cName = $this->modelClass;
     $lowerName = strtolower($cName);
 		$model = $cName::find($id);
@@ -117,8 +139,8 @@ class ModelController extends Controller{
 		return $this->error($msg, $code);
 	}
 
-	public function validateOwnership($request, $id, $key='creator_id'){
-		return $this->validateKey(
+	protected function validateOwnership($request, $id, $key='creator_id'){
+			return $this->validateKey(
 			$id, 
 			$key, 
 			$request->user()->id,
@@ -127,10 +149,10 @@ class ModelController extends Controller{
 		);
 	}
 
-	public function isAdmin($user)
+	protected function isAdmin($user)
 	{
 		if(!$user)
-			return null;
+			return false;
 		
 		return $user->roles()->where('role', 'admin')->get() != null;
 	}

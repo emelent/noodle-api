@@ -36,6 +36,7 @@ class UserController extends ModelController{
 
 	public function update(Request $request, $id){
 		$user = User::find($id);
+
 		if(!$user){
 			return $this->error("The user with {$id} doesn't exist", self::HTTP_NOT_FOUND);
 		}
@@ -51,5 +52,15 @@ class UserController extends ModelController{
 		$user->save();
 		
 		return $this->success("The user with id {$user->id} has been updated.", self::HTTP_OK);
+	}
+
+	public function destroy(Request $request, $id)
+	{
+		//can only update current user unless current user is admin 
+		if($id != $request->user()->id && !$this->isAdmin($request->user())){
+			return $this->error("Not permitted.", self::HTTP_FORBIDDEN);
+		}
+
+		return $this->destroyAction($request, $id, false);
 	}
 }
