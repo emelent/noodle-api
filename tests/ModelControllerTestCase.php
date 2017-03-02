@@ -57,7 +57,7 @@ class ModelControllerTestCase extends TestCase
    * @return void
    */
   public function testCanShowAllModels(){
-    $this->actingAs(User::findOrFail(1))->get("{$this->modelRoutePrefix}/")
+    $this->actingAs($this->getAdminUser())->get("{$this->modelRoutePrefix}/")
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -76,7 +76,7 @@ class ModelControllerTestCase extends TestCase
    */
   public function testCanShowModelById(){
     $id = 1;
-    $this->actingAs(User::findOrFail(1))->get("{$this->modelRoutePrefix}/$id")
+    $this->actingAs($this->getAdminUser())->get("{$this->modelRoutePrefix}/$id")
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => $this->modelFields
@@ -94,7 +94,7 @@ class ModelControllerTestCase extends TestCase
    */
   public function testDoesNotShowModelWithAnInvalidId(){
     $invalidId = 'invalid';
-    $this->actingAs(User::findOrFail(1))->get("{$this->modelRoutePrefix}/$invalidId")
+    $this->actingAs($this->getAdminUser())->get("{$this->modelRoutePrefix}/$invalidId")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
@@ -111,7 +111,7 @@ class ModelControllerTestCase extends TestCase
     $this->requestHack();
 
     $id = 1;
-    $this->actingAs(User::findOrFail(1))->delete("{$this->modelRoutePrefix}/$id")
+    $this->actingAs($this->getAdminUser())->delete("{$this->modelRoutePrefix}/$id")
       ->seeStatusCode(self::HTTP_OK);
 
     $this->missingFromDatabase($this->tableName, ['id' => $id]);
@@ -131,7 +131,7 @@ class ModelControllerTestCase extends TestCase
   public function testDoesNotDeleteInvalidEvent(){
     $this->requestHack();
     $id = 'invalid';
-    $this->actingAs(User::findOrFail(1))->delete("{$this->modelRoutePrefix}/$id/")
+    $this->actingAs($this->getAdminUser())->delete("{$this->modelRoutePrefix}/$id/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
@@ -147,7 +147,7 @@ class ModelControllerTestCase extends TestCase
     $this->requestHack();
 
     $invalidId = 'invalid';
-    $this->actingAs(User::findOrFail(1))->put("{$this->modelRoutePrefix}/$invalidId/")
+    $this->actingAs($this->getAdminUser())->put("{$this->modelRoutePrefix}/$invalidId/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 }

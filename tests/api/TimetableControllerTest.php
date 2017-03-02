@@ -26,54 +26,22 @@ class TimetableRoutesTest extends ModelControllerTestCase
    * @return void
    */
   public function testCanCreateANewTimetableWithValidData(){
-    //$this->requestHack();
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $this->requestHack();
+    $this->actingAs($this->getUser())
+      ->post("{$this->modelRoutePrefix}/")
+      ->seeStatusCode(self::HTTP_CREATED)
+      ->seeJson([
+        'data'  => 'The timetable has been created.']);
+
+    $this->seeInDatabase($this->tableName, [
+      'creator_id'  => $this->getUser()->id
+    ]);
   }
 
 
   /**
-   * I send a POST request to /v1/timetables/ with invalid
-   * data and the server sends an appropriate response and
-   * does not create a timetable in the database.
-   *
-   * @return void
+   * @override
    */
-  public function testDoesNotCreateANewTimetableWithInvalidData(){
-    //$this->requestHack();
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
-  }
-
-
-  /**
-   * I send a PUT request to /v1/timetables/{id}/ and 
-   * the server updates the timetable matching the given id
-   * in the database with the received data and returns 
-   * the appropriate response.
-   * 
-   * @return void
-   */
-  public function testCanUpdateExistingTimetableWithValidData(){
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
-  }
-
-
-  /**
-   * I send a PUT request to /v1/timetables/{id}/ and 
-   * the server updates the timetable matching the given id
-   * in the database with the received data and returns 
-   * the appropriate response.
-   * 
-   * @return void
-   */
-  public function testDoesNotUpdateExistingTimetableWithInvalidData(){
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+  public function testDoesNotTryToUpdateANonExistingModel(){
   }
 }
