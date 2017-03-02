@@ -15,6 +15,8 @@ class ModelControllerTestCase extends TestCase
   protected $tableName = null;
   protected $modelRoutePrefix = null;
   protected $modelFields = [];
+  protected $user = null;
+  protected $admin = null;
 
 
   /**
@@ -29,17 +31,23 @@ class ModelControllerTestCase extends TestCase
   }
 
   public function getUserByRole($role){
-    return User::filter(function($user){
+    return User::all()->filter(function($user) use($role){
       return $user->roles()->where('role', $role)->get();
     })->first();
   }
 
   public function getAdminUser(){
-    return $this->getUserByRole('admin');
+    if(!$this->admin){
+      $this->admin = $this->getUserByRole('admin');
+    }
+    return $this->admin;
   }
 
   public function getUser(){
-    return $this->getUserByRole('user');
+    if(!$this->user){
+      $this->user = $this->getUserByRole('user');
+    }
+    return $this->user;
   }
   
   /**

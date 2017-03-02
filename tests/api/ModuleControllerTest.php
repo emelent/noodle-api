@@ -38,7 +38,7 @@ class ModuleControllerTest extends ModelControllerTestCase
     $this->requestHack();
 
     $code = 'MOD385';
-    $this->post("{$this->modelRoutePrefix}/", [
+    $this->actingAs($this->getAdminUser())->post("{$this->modelRoutePrefix}/", [
       'name' => 'Modulo',
       'description' => 'Description of modulo',
       'code'  => $code,
@@ -46,7 +46,7 @@ class ModuleControllerTest extends ModelControllerTestCase
       'postgrad'  => 0,
     ])->seeStatusCode(self::HTTP_CREATED)
       ->seeJson([
-        'data' => "The module with code '$code' has been created."
+        'data' => 'The module has been created.'
     ]);
 
     //check that module is in the database
@@ -64,18 +64,18 @@ class ModuleControllerTest extends ModelControllerTestCase
    * @return void
    */
   public function testDoesNotCreateANewModuleWithInvalidData(){
-    $this->get('/');
+    $this->requestHack();
     $code = 'MOD352';
 
-    $this->post("{$this->modelRoutePrefix}/", [
-    ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
-      ->seeJson([
-        'code' => [MSG_CODE_REQUIRED],
-        'name' => [MSG_NAME_REQUIRED],
-        'period' => [MSG_PERIOD_REQUIRED],
-        'postgrad' => [MSG_postgrad_REQUIRED],
-        'description' => [MSG_DESC_REQUIRED]
-      ]);
+    $this->actingAs($this->getAdminUser())->post("{$this->modelRoutePrefix}/", [
+    ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY);
+      // ->seeJson([
+      //   'code' => [MSG_CODE_REQUIRED],
+      //   'name' => [MSG_NAME_REQUIRED],
+      //   'period' => [MSG_PERIOD_REQUIRED],
+      //   'postgrad' => [MSG_POSTGRAD_REQUIRED],
+      //   'description' => [MSG_DESC_REQUIRED]
+      // ]);
 
     //check that module is not in the database
     $this->missingFromDatabase($this->tableName, [
@@ -93,9 +93,24 @@ class ModuleControllerTest extends ModelControllerTestCase
    * @return void
    */
   public function testCanUpdateExistingModuleWithValidData(){
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $id = 1;
+    $module = Module::findOrFail($id);
+    $newCode = 'new123';
+    $newDescription = 'This is the new description';
+
+    $this->assertNotEquals($newCode, $module->code);
+    $this->assertNotEquals($newDescription, $module->description);
+
+    $this->actingAs($this->getAdminUser())->put("{$this->modelRoutePrefix}/$id", [
+      'code'  => $newCode,
+      'description' => $newDescription
+    ])->seeStatusCode(self::HTTP_OK);
+
+    //check that module is in the database
+    $this->seeInDatabase($this->tableName, [
+      'code' => $newCode,
+      'description' => $newDescription
+    ]);
   }
 
 
@@ -108,9 +123,24 @@ class ModuleControllerTest extends ModelControllerTestCase
    * @return void
    */
   public function testDoesNotUpdateExistingModuleWithInvalidData(){
-    //$this->get('/');
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $id = 1;
+    $module = Module::findOrFail($id);
+    $newCode = 'invalid code';
+
+    $this->actingAs($this->getAdminUser())->put("{$this->modelRoutePrefix}/$id", [
+      'code'  => $newCode
+    ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY);
+      // ->seeJson([
+      //   'code' => [MSG_CODE_REQUIRED],
+      //   'name' => [MSG_NAME_REQUIRED],
+      //   'period' => [MSG_PERIOD_REQUIRED],
+      //   'postgrad' => [MSG_POSTGRAD_REQUIRED],
+      //   'description' => [MSG_DESC_REQUIRED]
+      // ]);
+
+    //check that module is not in the database
+    $this->missingFromDatabase($this->tableName, [
+      'code' => $newCode
+    ]);
   }
 }
