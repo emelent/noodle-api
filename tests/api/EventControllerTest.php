@@ -107,7 +107,7 @@ class EventControllerTest extends ModelControllerTestCase
     $event = Event::findOrFail(1);
     $newName = 'new event name';
     $start = '01:23';
-    $this->assertNotEquals($event->name, $newName);
+    $this->assertNotEquals($newName, $event->name);
 
     $this->actingAs(User::findOrFail(1))
       ->put("{$this->modelRoutePrefix}/1/", ['name' => $newName, 'start' => $start])
@@ -135,7 +135,7 @@ class EventControllerTest extends ModelControllerTestCase
     $event = Event::findOrFail(1);
     $newName = 'invalid event';
     $start = '32101:23';
-    $this->assertNotEquals($event->name, $newName);
+    $this->assertNotEquals($newName, $event->name);
 
     $this->actingAs(User::findOrFail(1))
       ->put("{$this->modelRoutePrefix}/1/", ['name' => $newName, 'start' => $start])
