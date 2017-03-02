@@ -84,7 +84,6 @@ $app->group([
     $app->post('/', 'TimetableController@store');
     $app->get('/', 'TimetableController@showAll');
     $app->get('/{timetable_id}', 'TimetableController@show');
-    $app->put('/{timetable_id}', 'TimetableController@update');
     $app->delete('/{module_id}', 'TimetableController@destroy');
 
     /*timetable event routes*/
