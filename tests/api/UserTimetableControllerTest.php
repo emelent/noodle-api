@@ -27,14 +27,15 @@ class UserTimetableRoutesTest extends TestCase
    * @return void
    */
   public function testCanAddtimetables(){
-    $this->get('/');
+    $this->requestHack();
 
-    $user_id = 1;
+    $user = $this->getUser();
     $timetables = [1,2,3,4];
     $numTimetables = count($timetables);
     $timetablesJson = json_encode($timetables);
 
-    $this->post("/v1/users/$user_id/timetables", [
+    $this->actingAs($user)
+      ->post("/v1/users/{$user->id}/timetables", [
       'timetables'  => $timetablesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -60,18 +61,17 @@ class UserTimetableRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanRemovetimetables(){
-    $this->get('/');
-    $id = 1;
-    $user = User::findOrFail($id);
-    $timetables = $user->timetables();
-    $timetables->transform(function($timetable, $key){
+  public function testCanRemoveTimetables(){
+    $this->requestHack();
+    $user = $this->getUser();
+    $timetables = $user->timetables()->all()
+      ->transform(function($timetable, $key){
       return $timetable->id;
     });
     $timetablesArr = $timetables->toArray();
     $timetablesJson = json_encode($timetablesArr);
 
-    $this->delete("/v1/users/$id/timetables", [
+    $this->actingAs($user)->delete("/v1/users/{$user->id}/timetables", [
       'timetables'  =>  $timetablesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -95,12 +95,11 @@ class UserTimetableRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanShowtimetables(){
-    $this->get('/');
-
-    $id = 1;
-    if(User::findOrFail($id)->timetables()->count() > 0){
-      $this->get("/v1/users/$id/timetables")
+  public function testCanShowTimetables(){
+    $this->requestHack();
+    $user = $this->getUser();
+    if($user->timetables()->all()->count() > 0){
+      $this->get("/v1/users/{$user->id}/timetables")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [
