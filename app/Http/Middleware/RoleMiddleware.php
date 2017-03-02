@@ -13,9 +13,9 @@ class RoleMiddleware
    * @param  \Closure  $next
    * @return mixed
    */
-  public function handle($request, Closure $next, $name){
-    if(!$request->user()->roles()->where('role', $name)->first()){
-      return response()->json(['message' => 'Unauthorized.'], 401);
+  public function handle($request, Closure $next, $role){
+    if(!$request->user()->roles()->where('role', $role)->first()){
+      return response()->json(['message' => 'Not permitted.'], 403);
     }
 
     return $next($request);
