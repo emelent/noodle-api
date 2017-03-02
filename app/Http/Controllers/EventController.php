@@ -12,11 +12,11 @@ class EventController extends ModelController{
 		'day'		=> 'required|integer|between:1,7',
 		'start'	=> 'required|regex:/^(\d{2})(:)(\d{2})$/',
 		'end'	=> 'required|regex:/^(\d{2})(:)(\d{2})$/',
-		'date'	=> 'required|date',
 		'language'	=> 'required|integer',
 		'creator_id'	=> 'required|integer',
 		'module_id'	=> 'required|integer',
-		'group'	=> 'integer'
+		'group'	=> 'integer',		
+		'date'	=> 'date'
 	];
 
 	protected $updateRules = [
@@ -40,16 +40,14 @@ class EventController extends ModelController{
 
 
 	public function update(Request $request, $id){
-		return parent::update($request, $id, true);
+		//check ownership, unless user is admin
+		return parent::update($request, $id, !$this->isAdmin($request->user()));
 	}
 
 	public function store(Request $request)
 	{
 		$user = $request->user();
-		$request->input('creator_id', $user->id);
-		if($request->input('creator_id') != $user->id){
-			return $this->error('Invalid creator_id.', self::HTTP_UNPROCESSABLE_ENTITY);
-		}
+		$request->merge(['creator_id' => $user->id]);
 		return parent::store($request);
 	}
 

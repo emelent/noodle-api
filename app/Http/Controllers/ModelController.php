@@ -16,6 +16,7 @@ abstract class ModelController extends Controller{
   
   public function __construct($modelClass){
     $this->modelClass = $modelClass;
+    $this->modelName = strtolower(array_reverse(explode('\\', $modelClass))[0]);
   }
 
   public function showAll(Request $request){
@@ -49,37 +50,34 @@ abstract class ModelController extends Controller{
 
 	protected function showAction($request, $id){
     $cName = $this->modelClass;
-    $lowerName = strtolower($cName);
 		$model = $cName::find($id);
 		if(!$model){
-			return $this->error("The $lowerName with $id doesn't exist.", self::HTTP_NOT_FOUND);
+			return $this->error("The {$this->modelName} with $id doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 		return $this->success($model, self::HTTP_OK);
 	}
 
 	protected function destroyAction($request, $id, $validateOwnership=true){
     $cName = $this->modelClass;
-    $lowerName = strtolower($cName);
 		$model = $cName::find($id);
 		if(!$model){
-			return $this->error("The $lowerName with $id doesn't exist.", self::HTTP_NOT_FOUND);
+			return $this->error("The {$this->modelName} with $id doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 
-		if($validateOwnership && !isAdmin($request->user())){
+		if($validateOwnership && !$this->isAdmin($request->user())){
 			if($model->creator_id != $request->user()->id)
 				return $this->error('Not permitted.', self::HTTP_FORBIDDEN);
 		}
 
 		$model->delete();
-		return $this->success("The $lowerName has been deleted.", self::HTTP_OK);
+		return $this->success("The {$this->modelName} has been deleted.", self::HTTP_OK);
 	}
 
 	protected function updateAction($request, $id, $validateOwnership=false){
 		$cName = $this->modelClass;
-    $lowerName = strtolower($cName);
 		$model = $cName::find($id);
 		if(!$model){
-			return $this->error("The $lowerName with $id doesn't exist", self::HTTP_NOT_FOUND);
+			return $this->error("The {$this->modelName} with $id doesn't exist", self::HTTP_NOT_FOUND);
 		}
 
 		if($validateOwnership){
@@ -97,13 +95,12 @@ abstract class ModelController extends Controller{
 		}
 
 		$model->save();
-		return $this->success("The $lowerName has been updated.", self::HTTP_OK);
+		return $this->success("The {$this->modelName} has been updated.", self::HTTP_OK);
 	}
 
 
 	protected function storeAction($request){
 		$cName = $this->modelClass;
-    $lowerName = strtolower($cName);
 		$this->validateStoreRequest($request);
 
 		$fields = (new $cName())->getFillable();
@@ -112,7 +109,7 @@ abstract class ModelController extends Controller{
 			$data[$field] = $request->get($field);
 		}
 		$model = $cName::create($data);
-		return $this->success("The $lowerName has been created.", self::HTTP_CREATED);
+		return $this->success("The {$this->modelName} has been created.", self::HTTP_CREATED);
 	}
 
 	protected function validateUpdateRequest(Request $request){
@@ -125,11 +122,10 @@ abstract class ModelController extends Controller{
 
 	protected function validateKey($id, $key, $value, $msg, $code){
 		$cName = $this->modelClass;
-    $lowerName = strtolower($cName);
 		$model = $cName::find($id);
 
 		if(!$model){
-			return $this->error("The $lowerName with $id doesn't exist", self::HTTP_NOT_FOUND);
+			return $this->error("The {$this->modelName} with $id doesn't exist", self::HTTP_NOT_FOUND);
 		}
 
 		if($model->$key == $value){
