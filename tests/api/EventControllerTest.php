@@ -3,6 +3,7 @@
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Event;
+use App\User;
 
 const MSG_DAY_REQUIRED      = '';
 const MSG_START_REQUIRED    = '';
@@ -38,27 +39,29 @@ class EventControllerTest extends ModelControllerTestCase
     $this->requestHack();
 
     $name = 'Lesson 5';
-    $group = null;
-    $module_id = null;
-    
-    $this->post("{$this->modelRoutePrefix}/", [
+    $group = 1;
+    $module_id = 2;
+    $language = 1;
+
+    $this->actingAs(User::findOrFail(2))->post("{$this->modelRoutePrefix}/", [
       'name' => $name,
       'day'  => 1,
-      'start' => date("Y-m-d H:i:s"),
-      'end'   =>  date("Y-m-d H:i:s", strtotime('+1 hours')),
-      'date'  => null,
+      'start' => date("H:i"),
+      'end'   =>  date("H:i", strtotime('+1 hours')),
       'group' => $group,
+      'language'  => $language,
       'module_id' => $module_id
     ])->seeStatusCode(self::HTTP_CREATED)
       ->seeJson([
-        'data' => "The event with code '$name' has been created."
+        'data' => "The event has been created."
     ]);
 
     //check that event is in the database
     $this->seeInDatabase("{$this->tableName}", [
       'name' => $name,
       'group' => $group,
-      'module_id' => $module_id
+      'module_id' => $module_id,
+      'language'  => $language
     ]);
   }
 
@@ -73,17 +76,17 @@ class EventControllerTest extends ModelControllerTestCase
   public function testDoesNotCreateANewEventWithInvalidData(){
     $this->get('/');
     $name = 'invalid';
-    $this->post("{$this->modelRoutePrefix}/", [
-    ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
-      ->seeJson([
-        'day'         =>  [MSG_DAY_REQUIRED],
-        'start'       =>  [MSG_START_REQUIRED],
-        'end'         =>  [MSG_END_REQUIRED], 
-        'date'        =>  [MSG_DATE_REQUIRED],
-        'group'       =>  [MSG_GROUP_REQUIRED],
-        'creator_id'  =>  [MSG_CREATOR_REQUIRED],
-        'module_id'   =>  [MSG_MODULE_REQUIRED]
-      ]);
+    $this->actingAs(User::findOrFail(2))->post("{$this->modelRoutePrefix}/", [
+    ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY);
+      // ->seeJson([
+      //   'day'         =>  [MSG_DAY_REQUIRED],
+      //   'start'       =>  [MSG_START_REQUIRED],
+      //   'end'         =>  [MSG_END_REQUIRED], 
+      //   'date'        =>  [MSG_DATE_REQUIRED],
+      //   'group'       =>  [MSG_GROUP_REQUIRED],
+      //   'creator_id'  =>  [MSG_CREATOR_REQUIRED],
+      //   'module_id'   =>  [MSG_MODULE_REQUIRED]
+      // ]);
 
     //check that event is not in the database
     $this->missingFromDatabase("{$this->tableName}", [
@@ -101,9 +104,22 @@ class EventControllerTest extends ModelControllerTestCase
    * @return void
    */
   public function testCanUpdateExistingEventWithValidData(){
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $event = Event::findOrFail(1);
+    $newName = 'new event name';
+    $start = '01:23';
+    $this->assertNotEquals($event->name, $newName);
+
+    $this->actingAs(User::findOrFail(1))
+      ->put("{$this->modelRoutePrefix}/1/", ['name' => $newName, 'start' => $start])
+      ->seeStatusCode(self::HTTP_OK)
+      ->seeJson([
+        'data' => 'The event has been updated.'
+    ]);
+
+    $this->seeInDatabase($this->tableName, [
+      'name'  => $newName,
+      'start' => $start
+    ]);
   }
 
 
@@ -116,8 +132,18 @@ class EventControllerTest extends ModelControllerTestCase
    * @return void
    */
   public function testDoesNotUpdateExistingEventWithInvalidData(){
-    $this->markTestIncomplete(
-      'This test has not been implemented yet.'
-    );
+    $event = Event::findOrFail(1);
+    $newName = 'invalid event';
+    $start = '32101:23';
+    $this->assertNotEquals($event->name, $newName);
+
+    $this->actingAs(User::findOrFail(1))
+      ->put("{$this->modelRoutePrefix}/1/", ['name' => $newName, 'start' => $start])
+      ->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY);
+
+    $this->missingFromDatabase($this->tableName, [
+      'name'  => $newName,
+      'start' => $start
+    ]);
   }
 }

@@ -15,14 +15,7 @@ class ModelControllerTestCase extends TestCase
   protected $tableName = null;
   protected $modelRoutePrefix = null;
   protected $modelFields = [];
-  protected $admin = null;
-  protected $user = null;
 
-  function __construct()
-  {
-    $this->admin = User::findOrFail(1);
-    $this->user = User::findOrFail(2);
-  }
 
   /**
    * Seems to fix request issue when running this with codeception
@@ -42,7 +35,7 @@ class ModelControllerTestCase extends TestCase
    * @return void
    */
   public function testCanShowAllModels(){
-    $this->get("{$this->modelRoutePrefix}/")
+    $this->actingAs(User::findOrFail(1))->get("{$this->modelRoutePrefix}/")
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -61,7 +54,7 @@ class ModelControllerTestCase extends TestCase
    */
   public function testCanShowModelById(){
     $id = 1;
-    $this->get("{$this->modelRoutePrefix}/$id")
+    $this->actingAs(User::findOrFail(1))->get("{$this->modelRoutePrefix}/$id")
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => $this->modelFields
@@ -79,7 +72,7 @@ class ModelControllerTestCase extends TestCase
    */
   public function testDoesNotShowModelWithAnInvalidId(){
     $invalidId = 'invalid';
-    $this->get("{$this->modelRoutePrefix}/$invalidId")
+    $this->actingAs(User::findOrFail(1))->get("{$this->modelRoutePrefix}/$invalidId")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
@@ -96,7 +89,7 @@ class ModelControllerTestCase extends TestCase
     $this->requestHack();
 
     $id = 1;
-    $this->delete("{$this->modelRoutePrefix}/$id")
+    $this->actingAs(User::findOrFail(1))->delete("{$this->modelRoutePrefix}/$id")
       ->seeStatusCode(self::HTTP_OK);
 
     $this->missingFromDatabase($this->tableName, ['id' => $id]);
@@ -116,7 +109,7 @@ class ModelControllerTestCase extends TestCase
   public function testDoesNotDeleteInvalidEvent(){
     $this->requestHack();
     $id = 'invalid';
-    $this->delete("{$this->modelRoutePrefix}/$id/")
+    $this->actingAs(User::findOrFail(1))->delete("{$this->modelRoutePrefix}/$id/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 
@@ -132,7 +125,7 @@ class ModelControllerTestCase extends TestCase
     $this->requestHack();
 
     $invalidId = 'invalid';
-    $this->put("{$this->modelRoutePrefix}/$invalidId/")
+    $this->actingAs(User::findOrFail(1))->put("{$this->modelRoutePrefix}/$invalidId/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 }
