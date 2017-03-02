@@ -28,6 +28,20 @@ class ModelControllerTestCase extends TestCase
     $this->get('/');
   }
 
+  public function getUserByRole($role){
+    return User::filter(function($user){
+      return $user->roles()->where('role', $role)->get();
+    })->first();
+  }
+
+  public function getAdminUser(){
+    return $this->getUserByRole('admin');
+  }
+
+  public function getUser(){
+    return $this->getUserByRole('user');
+  }
+  
   /**
    * I send a GET request to /api/v1/<modelRoutePrefix>/ and the server
    * returns a list of models. (TODO add authentication)
