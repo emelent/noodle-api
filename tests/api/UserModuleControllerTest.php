@@ -27,14 +27,15 @@ class UserModuleRoutesTest extends TestCase
    * @return void
    */
   public function testCanAddmodules(){
-    $this->get('/');
+    $this->requestHack();
+    $user = $this->getUser();
 
-    $user_id = 1;
     $modules = [1,2,3,4];
     $numModules = count($modules);
     $modulesJson = json_encode($modules);
 
-    $this->post("/v1/users/$user_id/modules", [
+    $this->actingAsUser($user)
+      ->post("/v1/users/{$user->id}/modules", [
       'modules'  => $modulesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
