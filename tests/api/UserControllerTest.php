@@ -43,7 +43,7 @@ class UserControllerTest extends TestCase
    */
   public function testDoesNotShowAllUsersWhenNotAnAdminUser(){
     $this->actingAs(User::findOrFail(2))->get('/v1/users/')
-      ->seeStatusCode(self::HTTP_UNAUTHORIZED);
+      ->seeStatusCode(self::HTTP_FORBIDDEN);
   }
 
   /**
