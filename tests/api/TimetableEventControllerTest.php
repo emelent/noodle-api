@@ -29,14 +29,16 @@ class TimetableEventRoutesTest extends TestCase
    * @return void
    */
   public function testCanAddEvents(){
-    $this->get('/');
+    $this->requestHack();
 
     $timetable_id = 1;
+    $user = Timetable::findOrFail($timetable_id)->creator();
     $events = [1,2,3,4];
     $numEvents = count($events);
     $eventsJson = json_encode($events);
 
-    $this->post("/v1/timetables/$timetable_id/events", [
+    $this->actingAs($user)
+      ->post("/v1/timetables/$timetable_id/events", [
       'events'  => $eventsJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -63,17 +65,20 @@ class TimetableEventRoutesTest extends TestCase
    * @return void
    */
   public function testCanRemoveEvents(){
-    $this->get('/');
+    $this->requestHack();
     $id = 1;
     $timetable = Timetable::findOrFail($id);
-    $events = $timetable->events();
+
+    $user = Timetable::findOrFail($id)->creator();
+    $events = $timetable->events()->all();
     $events->transform(function($event, $key){
       return $event->id;
     });
     $eventsArr = $events->toArray();
     $eventsJson = json_encode($eventsArr);
 
-    $this->delete("/v1/timetables/$id/events", [
+    $this->actingAs($user)
+    ->delete("/v1/timetables/$id/events", [
       'events'  =>  $eventsJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
