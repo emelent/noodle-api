@@ -15,41 +15,8 @@ class ModelControllerTestCase extends TestCase
   protected $tableName = null;
   protected $modelRoutePrefix = null;
   protected $modelFields = [];
-  protected $user = null;
-  protected $admin = null;
 
 
-  /**
-   * Seems to fix request issue when running this with codeception
-   * instead of phpunit. This just sends a get request, without
-   * this, all non-GET requests bug out.
-   * 
-   * @return void
-   */
-  protected function requestHack(){
-    $this->get('/');
-  }
-
-  public function getUserByRole($role){
-    return User::all()->filter(function($user) use($role){
-      return $user->roles()->where('role', $role)->get();
-    })->first();
-  }
-
-  public function getAdminUser(){
-    if(!$this->admin){
-      $this->admin = $this->getUserByRole('admin');
-    }
-    return $this->admin;
-  }
-
-  public function getUser(){
-    if(!$this->user){
-      $this->user = $this->getUserByRole('user');
-    }
-    return $this->user;
-  }
-  
   /**
    * I send a GET request to /api/v1/<modelRoutePrefix>/ and the server
    * returns a list of models. (TODO add authentication)
