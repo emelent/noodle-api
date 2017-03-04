@@ -33,9 +33,7 @@ class EventController extends ModelController{
 
   public function __construct(){
     parent::__construct(Event::class);
-    $this->middleware('auth:api', ['except' => [
-    	'show', 'showAll'
-    ]]);
+    $this->middleware('auth:api');
   }
 
 
