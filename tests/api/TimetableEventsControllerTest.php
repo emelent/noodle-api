@@ -4,6 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 use App\Timetable;
+use App\User;
 
 const EVENT_FIELDS = [
   'name', 'day', 'start', 'end',
@@ -32,7 +33,7 @@ class TimetableEventRoutesTest extends TestCase
     $this->requestHack();
 
     $timetable_id = 1;
-    $user = Timetable::findOrFail($timetable_id)->creator();
+    $user = User::findOrFail(Timetable::findOrFail($timetable_id)->creator_id);
     $events = [1,2,3,4];
     $numEvents = count($events);
     $eventsJson = json_encode($events);
@@ -68,15 +69,13 @@ class TimetableEventRoutesTest extends TestCase
     $this->requestHack();
     $id = 1;
     $timetable = Timetable::findOrFail($id);
-
-    $user = Timetable::findOrFail($id)->creator();
-    $events = $timetable->events()->all();
-    $events->transform(function($event, $key){
-      return $event->id;
-    });
-    $eventsArr = $events->toArray();
+    $user = User::findOrFail($timetable->creator_id);
+    $eventsArr = [];
+    foreach($timetable->events as $event){
+      array_push($eventsArr, $event->id);
+    }
     $eventsJson = json_encode($eventsArr);
-
+    $numEvents = count($eventsArr);
     $this->actingAs($user)
     ->delete("/v1/timetables/$id/events", [
       'events'  =>  $eventsJson
@@ -89,7 +88,7 @@ class TimetableEventRoutesTest extends TestCase
     foreach($eventsArr as $event_id){
       $this->missingFromDatabase('timetable_events', [
         'event_id'  => $event_id,
-        'timetable_id'  => $timetable_id
+        'timetable_id'  => $id
       ]);
     }
   }
@@ -106,8 +105,10 @@ class TimetableEventRoutesTest extends TestCase
     $this->get('/');
 
     $id = 1;
-    if(Timetable::findOrFail($id)->events()->count() > 0){
-      $this->get("/v1/timetables/$id/events")
+    $timetable = Timetable::findOrFail($id);
+    if($timetable->events()->count() > 0){
+      $this->actingAs(User::findOrFail($timetable->creator_id))
+        ->get("/v1/timetables/$id/events")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [
