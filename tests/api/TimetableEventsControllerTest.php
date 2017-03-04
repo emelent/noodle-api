@@ -32,14 +32,19 @@ class TimetableEventRoutesTest extends TestCase
   public function testCanAddEvents(){
     $this->requestHack();
 
-    $timetable_id = 1;
-    $user = User::findOrFail(Timetable::findOrFail($timetable_id)->creator_id);
+    $timetable = Timetable::findOrFail(1);
+    $user = User::findOrFail($timetable->creator_id);
+
     $events = [1,2,3,4];
+    //detach events if they are already used, to test
+    //adding them again
+    $timetable->events()->detach($events);
+
     $numEvents = count($events);
     $eventsJson = json_encode($events);
 
     $this->actingAs($user)
-      ->post("/v1/timetables/$timetable_id/events", [
+      ->post("/v1/timetables/{$timetable->id}/events", [
       'events'  => $eventsJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -50,7 +55,7 @@ class TimetableEventRoutesTest extends TestCase
     foreach($events as $event_id){
       $this->seeInDatabase('timetable_events', [
         'event_id'  => $event_id,
-        'timetable_id'  => $timetable_id
+        'timetable_id'  => $timetable->id
       ]);
     }
   }
