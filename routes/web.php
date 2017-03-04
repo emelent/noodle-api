@@ -79,7 +79,6 @@ $app->group([
   /*timetable routes*/
   $app->group([
     'prefix'  =>  'timetables/',
-    'middleware'  => 'auth:api',
   ], function() use ($app){
     $app->post('/', 'TimetableController@store');
     $app->get('/', 'TimetableController@showAll');
@@ -89,11 +88,10 @@ $app->group([
     /*timetable event routes*/
     $app->group([
       'prefix'  =>  '/{timetable_id}/events/',
-      'middleware'  => 'auth:api',
     ], function() use($app){
-      $app->get('/', 'TimetableEventController@showAll');
-      $app->delete('/', 'TimetableEventController@remove');
-      $app->post('/', 'TimetableEventController@add');
+      $app->get('/', 'TimetableEventsController@showEvents');
+      $app->delete('/', 'TimetableEventsController@removeEvents');
+      $app->post('/', 'TimetableEventsController@addEvents');
     });
   });
 });
