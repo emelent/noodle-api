@@ -7,7 +7,7 @@ use App\User;
 
 const MODULE_FIELDS = [
   'name', 'description', 'code',
-  'type', 'period', 'id'
+  'postgrad', 'period', 'id'
 ];
 
 class UserModuleRoutesTest extends TestCase
@@ -26,7 +26,7 @@ class UserModuleRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanAddmodules(){
+  public function testCanAddModules(){
     $this->requestHack();
     $user = $this->getUser();
 
@@ -34,7 +34,7 @@ class UserModuleRoutesTest extends TestCase
     $numModules = count($modules);
     $modulesJson = json_encode($modules);
 
-    $this->actingAsUser($user)
+    $this->actingAs($user)
       ->post("/v1/users/{$user->id}/modules", [
       'modules'  => $modulesJson
     ])->seeStatusCode(self::HTTP_OK)
@@ -46,7 +46,7 @@ class UserModuleRoutesTest extends TestCase
     foreach($modules as $module_id){
       $this->seeInDatabase('user_modules', [
         'module_id'  => $module_id,
-        'user_id'  => $user_id
+        'user_id'  => $user->id
       ]);
     }
   }
@@ -61,29 +61,30 @@ class UserModuleRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanRemovemodules(){
+  public function testCanRemoveModules(){
     $this->get('/');
     $id = 1;
     $user = User::findOrFail($id);
-    $modules = $user->modules();
+    $modules = $user->modules()->get();
     $modules->transform(function($module, $key){
       return $module->id;
     });
     $modulesArr = $modules->toArray();
     $modulesJson = json_encode($modulesArr);
+    $numModules = count($modulesArr);
 
-    $this->delete("/v1/users/$id/modules", [
+    $this->actingAs($user)->delete("/v1/users/$id/modules", [
       'modules'  =>  $modulesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
-        'data'  =>  "Removed $nummodules module(s) from user."
+        'data'  =>  "Removed $numModules module(s) from user."
       ]);
     
     //check that removed modules are not present in database
     foreach($modulesArr as $module_id){
       $this->missingFromDatabase('user_modules', [
         'module_id'  => $module_id,
-        'user_id'  => $user_id
+        'user_id'  => $user->id
       ]);
     }
   }
@@ -96,12 +97,13 @@ class UserModuleRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanShowmodules(){
+  public function testCanShowModules(){
     $this->get('/');
 
     $id = 1;
-    if(User::findOrFail($id)->modules()->count() > 0){
-      $this->get("/v1/users/$id/modules")
+    $user = User::findOrFail($id);
+    if($user->modules()->count() > 0){
+      $this->actingAs($user)->get("/v1/users/$id/modules")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [
