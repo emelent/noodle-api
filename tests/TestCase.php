@@ -1,6 +1,7 @@
 <?php
 
 use Lukasoppermann\Httpstatus\Httpstatuscodes;
+use App\User;
 
 abstract class TestCase extends Laravel\Lumen\Testing\TestCase implements Httpstatuscodes
 {
