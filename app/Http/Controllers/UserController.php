@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+
+use App\User;
+use App\Role;
 
 class UserController extends ModelController{
 
@@ -31,6 +33,9 @@ class UserController extends ModelController{
 			'email' => $request->get('email'),
 			'password'=> Hash::make($request->get('password'))
 		]);
+
+		//add user role to new user
+		$user->roles()->attach(Role::where('role', 'user')->first()->id);
 		return $this->success("The user with email {$user->email} has been created.", self::HTTP_CREATED);
 	}
 
