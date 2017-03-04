@@ -25,6 +25,8 @@ class CreateUserRolesTable extends Migration
         $table->foreign('role_id')->references('id')
           ->on('roles')->onDelete('cascade');
 
+        //no duplicate role assigned to user
+        $table->unique(['role_id', 'user_id']);
       });
 
     }

@@ -24,6 +24,9 @@ class CreateTimetableEventsTable extends Migration
         ->on('timetables')->onDelete('cascade');
       $table->foreign('event_id')->references('id')
         ->on('events')->onDelete('cascade');
+
+      //no duplicate events assigned to a table or vice versa
+      $table->unique(['event_id', 'timetable_id']);
     });
   }
 
