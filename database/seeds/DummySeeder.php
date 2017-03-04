@@ -71,7 +71,7 @@ class DummySeeder extends Seeder
     factory(Event::class, NUM_EVENTS)->create();
 
     //create roles
-    foreach(['user', 'admin'] as $role){
+    foreach(['admin', 'user'] as $role){
       DB::table('roles')->insert([
         'role'  => $role
       ]);
@@ -79,46 +79,87 @@ class DummySeeder extends Seeder
 
     //create users
     factory(User::class, NUM_USERS)->create()->each(function($u, $key){
-      $numSelectedModules = rand(2, NUM_MODULES);
+
+      //--------
+      // SELECT RANDOM MODULES FOR USER
+      //---------
+
+      $numSelectedModules = rand(2, NUM_MODULES-1);
+
+      //populate available indexes
+      $availableModules = [];
+      for($i=0; $i < NUM_MODULES ; $i++)
+        array_push($availableModules, $i+1);
+      
       //add random modules for user
       for($i = 0; $i < $numSelectedModules; $i++){
+        $index = rand(0, count($availableModules) - 1);
         DB::table('user_modules')->insert([
-          'module_id' =>  rand(1, NUM_MODULES),
+          'module_id' =>  $availableModules[$index],
           'user_id' => $u->id
         ]);
+        //to prevent duplicates remove selected element
+        //from availableModules array
+        array_splice($availableModules, $index, 1);
       }
+      //---------------------------------
 
+      //-------
+      // SET USER ROLES
+      //-------
+
+      //add user role
       DB::table('user_roles')->insert([
         'user_id' => $u->id,
-        'role_id' => 1
+        'role_id' => 2
       ]);
+
+      //Make first user admin
       if($key == 0){
+        //add admin role
         DB::table('user_roles')->insert([
           'user_id' => $u->id,
-          'role_id' => 2
+          'role_id' => 1
         ]);
       }
+      //----------------------------------
     });
 
     //create tables
     factory(Timetable::class, NUM_TABLES)->create()->each(function($t){
       $numSelectedEvents = rand(1, NUM_EVENTS);
       $numSelectedUsers = rand(0, NUM_USERS);
+
+      $availableEvents  = [];
+      for($i=0; $i < NUM_EVENTS; $i++)
+        array_push($availableEvents, $i + 1);
     
       //add random events for timetable
       for($i = 0; $i < $numSelectedEvents; $i++){
+        $index = rand(0, count($availableEvents) -1);
         DB::table('timetable_events')->insert([
-          'event_id' =>  rand(1, NUM_MODULES),
+          'event_id' =>  $availableEvents[$index],
           'timetable_id' => $t->id
         ]);
+
+        // unset($availableEvents[$index]);
+        array_splice($availableEvents, $index, 1);
       }
 
       //add random users of timetable
+      $availableUsers = [];
+      for($i=0; $i < NUM_EVENTS; $i++)
+        array_push($availableUsers, $i + 1);
+
       for($i=0; $i < $numSelectedUsers; $i++){
+        $index = rand(0, count($availableUsers) -1);
         DB::table('user_timetables')->insert([
           'timetable_id' => $t->id,
-          'user_id' => rand(1, NUM_USERS)
+          'user_id' => $availableUsers[$index]
         ]);
+
+        // unset($availableUsers[$index]);
+        array_splice($availableUsers, $index, 1);
       }
     });
 
