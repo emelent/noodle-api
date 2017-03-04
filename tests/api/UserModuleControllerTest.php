@@ -33,6 +33,9 @@ class UserModuleRoutesTest extends TestCase
     $modules = [1,2,3,4];
     $numModules = count($modules);
     $modulesJson = json_encode($modules);
+    //detach modules if they are already used, to test
+    //adding them again
+    $user->modules()->detach($modules);
 
     $this->actingAs($user)
       ->post("/v1/users/{$user->id}/modules", [
