@@ -34,6 +34,7 @@ class EventController extends ModelController{
   public function __construct(){
     parent::__construct(Event::class);
     $this->middleware('auth:api');
+    $this->middleware('role:user');
   }
 
 

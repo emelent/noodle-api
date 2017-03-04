@@ -14,7 +14,7 @@ class UserTimetablesController extends Controller
 	function __construct()
 	{
 		$this->middleware('auth:api');
-		// $this->middleware('role:user');
+		$this->middleware('role:user');
 	}
 
 	public function showTimetables(Request $request,  $id)

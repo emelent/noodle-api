@@ -14,7 +14,7 @@ class UserModulesController extends Controller
 	function __construct()
 	{
 		$this->middleware('auth:api');
-		// $this->middleware('role:user');
+		$this->middleware('role:user');
 	}
 
 	public function showModules(Request $request,  $id)
