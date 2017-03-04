@@ -39,18 +39,18 @@ $app->group([
     $app->group([
       'prefix'  =>  '/{user_id}/modules/',
     ], function() use($app){
-      $app->get('/', 'UserModulesController@showAll');
-      $app->delete('/', 'UserModulesController@remove');
-      $app->post('/', 'UserModulesController@add');
+      $app->get('/', 'UserModulesController@showModules');
+      $app->delete('/', 'UserModulesController@removeModules');
+      $app->post('/', 'UserModulesController@addModules');
     });
 
     /*user timetable routes*/
     $app->group([
       'prefix'  =>  '/{user_id}/timetables/'
     ], function() use($app){
-      $app->get('/', 'UserTimetablesController@showAll');
-      $app->delete('/', 'UserTimetablesController@remove');
-      $app->post('/', 'UserTimetablesController@add');
+      $app->get('/', 'UserTimetablesController@showTimetables');
+      $app->delete('/', 'UserTimetablesController@removeTimetables');
+      $app->post('/', 'UserTimetablesController@addTimetables');
     });
   });
 
