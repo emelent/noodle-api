@@ -14,7 +14,7 @@ class UserModulesController extends Controller
 	function __construct()
 	{
 		$this->middleware('auth:api');
-		$this->role('role:user');
+		// $this->middleware('role:user');
 	}
 
 	public function showModules(Request $request,  $id)
@@ -24,7 +24,7 @@ class UserModulesController extends Controller
 			return $this->error("The user with $id doesn't exist.", self::HTTP_NOT_FOUND);
 		}
 
-		return $this->success($user->modules()->get());
+		return $this->success($user->modules()->get(), self::HTTP_OK);
 	}
 
 	public function addModules(Request $request, $id)
@@ -40,10 +40,11 @@ class UserModulesController extends Controller
 
 		//add modules to related user
 		$this->validate($request, $rules);
-		$moduleIds = json_encode($request->input('modules'), true);
+		$moduleIds = json_decode($request->input('modules'), true);
 		$user->modules()->attach($moduleIds);
 
-		return $this->success('Modules successfully added to user.', self::HTTP_OK);		
+		$numModules = count($moduleIds);
+		return $this->success("Added $numModules module(s) to user.", self::HTTP_OK);		
 	}
 
 	
@@ -60,10 +61,10 @@ class UserModulesController extends Controller
 
 		//remove modules from related user
 		$this->validate($request, $rules);
-		$moduleIds = json_encode($request->input('modules'), true);
+		$moduleIds = json_decode($request->input('modules'), true);
 		$user->modules()->detach($moduleIds);
-
-		return $this->success('Modules successfully removed from user.', self::HTTP_OK);		
+		$numModules = count($moduleIds);
+		return $this->success("Removed $numModules module(s) from user.", self::HTTP_OK);		
 	}
 
 }
