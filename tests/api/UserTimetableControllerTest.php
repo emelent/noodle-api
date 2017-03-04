@@ -26,7 +26,7 @@ class UserTimetableRoutesTest extends TestCase
    *
    * @return void
    */
-  public function testCanAddtimetables(){
+  public function testCanAddTimetables(){
     $this->requestHack();
 
     $user = $this->getUser();
@@ -34,6 +34,9 @@ class UserTimetableRoutesTest extends TestCase
     $numTimetables = count($timetables);
     $timetablesJson = json_encode($timetables);
 
+    //detach timetables if they are already used, to test
+    //adding them again
+    $user->timetables()->detach($timetables);
     $this->actingAs($user)
       ->post("/v1/users/{$user->id}/timetables", [
       'timetables'  => $timetablesJson
@@ -46,7 +49,7 @@ class UserTimetableRoutesTest extends TestCase
     foreach($timetables as $timetable_id){
       $this->seeInDatabase('user_timetables', [
         'timetable_id'  => $timetable_id,
-        'user_id'  => $user_id
+        'user_id'  => $user->id
       ]);
     }
   }
@@ -64,25 +67,25 @@ class UserTimetableRoutesTest extends TestCase
   public function testCanRemoveTimetables(){
     $this->requestHack();
     $user = $this->getUser();
-    $timetables = $user->timetables()->all()
+    $timetables = $user->timetables()->get()
       ->transform(function($timetable, $key){
       return $timetable->id;
     });
     $timetablesArr = $timetables->toArray();
     $timetablesJson = json_encode($timetablesArr);
-
+    $numTimetables = count($timetablesArr);
     $this->actingAs($user)->delete("/v1/users/{$user->id}/timetables", [
       'timetables'  =>  $timetablesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
-        'data'  =>  "Removed $numtimetables timetable(s) from user."
+        'data'  =>  "Removed $numTimetables timetable(s) from user."
       ]);
     
     //check that removed timetables are not present in database
     foreach($timetablesArr as $timetable_id){
       $this->missingFromDatabase('user_timetables', [
         'timetable_id'  => $timetable_id,
-        'user_id'  => $user_id
+        'user_id'  => $user->id
       ]);
     }
   }
@@ -98,8 +101,9 @@ class UserTimetableRoutesTest extends TestCase
   public function testCanShowTimetables(){
     $this->requestHack();
     $user = $this->getUser();
-    if($user->timetables()->all()->count() > 0){
-      $this->get("/v1/users/{$user->id}/timetables")
+    if($user->timetables()->get()->count() > 0){
+      $this->actingAs($user)
+        ->get("/v1/users/{$user->id}/timetables")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [
