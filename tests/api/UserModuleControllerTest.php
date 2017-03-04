@@ -5,16 +5,15 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 
 use App\User;
 
-const MODULE_FIELDS = [
-  'name', 'description', 'code',
-  'postgrad', 'period', 'id'
-];
 
 class UserModuleRoutesTest extends TestCase
 {
   use DatabaseTransactions;
 
-
+  const MODULE_FIELDS = [
+    'name', 'description', 'code',
+    'postgrad', 'period', 'id'
+  ];
   /**
    * I send a POST request to /v1/users/{id}/modules/ where
    * id is a valid user id with the parameter 'modules' 
@@ -110,7 +109,7 @@ class UserModuleRoutesTest extends TestCase
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [
-            '*' => MODULE_FIELDS 
+            '*' => self::MODULE_FIELDS 
           ]
         ]);
     }
