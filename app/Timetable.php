@@ -37,4 +37,14 @@ class Timetable extends Model
         'user_id'
       );
     }
+
+    public function updateEventsHash()
+    { 
+      $eventIds = [];
+      $events= $this->events()->get()->sortBy('id');
+      foreach($events as $event){
+        array_push($eventIds, $event->id);
+      }
+      $this->hash = implode('#', $eventIds);
+    }
 }
