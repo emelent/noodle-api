@@ -43,7 +43,7 @@ class EventControllerTest extends ModelControllerTestCase
     $module_id = 2;
     $language = 1;
 
-    $this->actingAs(User::findOrFail(2))->post("{$this->modelRoutePrefix}/", [
+    $this->actingAs($this->getUser())->post("{$this->modelRoutePrefix}/", [
       'name' => $name,
       'day'  => 1,
       'start' => date("H:i"),
@@ -76,7 +76,7 @@ class EventControllerTest extends ModelControllerTestCase
   public function testDoesNotCreateANewEventWithInvalidData(){
     $this->get('/');
     $name = 'invalid';
-    $this->actingAs(User::findOrFail(2))->post("{$this->modelRoutePrefix}/", [
+    $this->actingAs($this->getUser())->post("{$this->modelRoutePrefix}/", [
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY);
       // ->seeJson([
       //   'day'         =>  [MSG_DAY_REQUIRED],
@@ -109,7 +109,7 @@ class EventControllerTest extends ModelControllerTestCase
     $start = '01:23';
     $this->assertNotEquals($newName, $event->name);
 
-    $this->actingAs(User::findOrFail(1))
+    $this->actingAs($this->getAdminUser())
       ->put("{$this->modelRoutePrefix}/1/", ['name' => $newName, 'start' => $start])
       ->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -137,7 +137,7 @@ class EventControllerTest extends ModelControllerTestCase
     $start = '32101:23';
     $this->assertNotEquals($newName, $event->name);
 
-    $this->actingAs(User::findOrFail(1))
+    $this->actingAs($this->getAdminUser())
       ->put("{$this->modelRoutePrefix}/1/", ['name' => $newName, 'start' => $start])
       ->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY);
 
