@@ -24,6 +24,6 @@ const USER_FIELDS = [
 ];
 
 const TIMETABLE_FIELDS = [
-  'id', 'hash', 'creator_id',
+  'id', 'hash', 'moduleDna', 'creator_id',
   'created_at', 'updated_at'
 ];

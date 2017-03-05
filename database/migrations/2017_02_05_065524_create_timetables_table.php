@@ -17,6 +17,7 @@ class CreateTimetablesTable extends Migration
       $table->increments('id');
       $table->timestamps();
       $table->string('hash')->nullable()->unique();
+      $table->string('moduleDna')->nullable();
       $table->integer('creator_id')->unsigned();
 
       $table->foreign('creator_id')->references('id')
