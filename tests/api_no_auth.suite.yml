@@ -2,3 +2,6 @@ class_name: Api_no_authTester
 modules:
     enabled:
         - \Helper\Api_no_auth
+        - Asserts
+        - Lumen:
+            part: ORM
