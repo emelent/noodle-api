@@ -93,5 +93,9 @@ $app->group([
       $app->delete('/', 'TimetableEventsController@removeEvents');
       $app->post('/', 'TimetableEventsController@addEvents');
     });
+
   });
+
+
+  $app->post('/search/timetables/withModuleDna', 'TimetableController@withModuleDna');
 });

@@ -13,8 +13,8 @@ class TimetableController extends ModelController{
 
   public function __construct(){
     parent::__construct(Timetable::class);
-    $this->middleware('auth:api', ['except'	=> ['show','showAll']]);
-    $this->middleware('role:user', ['except'	=> ['show','showAll']]);
+    $this->middleware('auth:api', ['except'	=> ['show','showAll', 'withModuleDna']]);
+    $this->middleware('role:user', ['except'	=> ['show','showAll', 'withModuleDna']]);
   }
 
 	public function store(Request $request){
@@ -29,5 +29,16 @@ class TimetableController extends ModelController{
 		}
 
 		return parent::destroy($request, $id);
+	}
+
+	public function withModuleDna(Request $request)
+	{
+		$rules = ['moduleDna' => 'required|string'];
+		$this->validate($request, $rules);
+
+		return $this->success(
+			Timetable::where('moduleDna', $request->input('moduleDna'))->get(), 
+			self::HTTP_OK
+		);
 	}
 }
