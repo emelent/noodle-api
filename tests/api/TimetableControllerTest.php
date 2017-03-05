@@ -35,7 +35,20 @@ class TimetableRoutesTest extends ModelControllerTestCase
     ]);
   }
 
+  public function testCanGetTimetableByModuleDna()
+  {
+    $this->requestHack();
+    $timetable = Timetable::findOrFail(1);
 
+    $this->actingAs($this->getUser())
+      ->post('/v1/search/timetables/withModuleDna', [
+        'moduleDna' => $timetable->moduleDna])
+      ->seeJsonStructure([
+        'data'  => [
+          '*' => $this->modelFields
+        ]
+      ]);
+  }
   /**
    * @override
    */
