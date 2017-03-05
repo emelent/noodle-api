@@ -15,12 +15,12 @@ class EventControllerTest extends NoAuthModelControllerTestCase
     'updated_at'
   ];
 
-  public function testCanShowAllEvents()
+  public function testDoesNotShowAllEvents()
   {
     $this->canNotShowAllModels();
   }
 
-  public function testCanShowEventById()
+  public function testDoesNotShowEventById()
   {
     $this->canNotShowModelById();
   }
