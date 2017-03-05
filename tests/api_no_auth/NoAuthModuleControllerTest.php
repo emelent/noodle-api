@@ -4,7 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Module;
 
-class ModuleControllerTest extends NoAuthModelControllerTestCase
+class NoAuthModuleControllerTest extends NoAuthModelControllerTestCase
 {
 
   protected $modelRoutePrefix = MODULES_ROUTE;

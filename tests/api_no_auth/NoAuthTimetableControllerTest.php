@@ -4,7 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Timetable;
 
-class TimetableControllerTest extends NoAuthModelControllerTestCase
+class NoAuthTimetableControllerTest extends NoAuthModelControllerTestCase
 {
 
   protected $modelRoutePrefix = TIMETABLES_ROUTE;

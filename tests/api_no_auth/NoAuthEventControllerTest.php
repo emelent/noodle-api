@@ -4,7 +4,7 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Event;
 
-class EventControllerTest extends NoAuthModelControllerTestCase
+class NoAuthEventControllerTest extends NoAuthModelControllerTestCase
 {
 
   protected $modelRoutePrefix = EVENTS_ROUTE;
