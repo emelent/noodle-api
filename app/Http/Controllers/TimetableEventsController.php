@@ -13,8 +13,8 @@ class TimetableEventsController extends Controller
 
 	function __construct()
 	{
-		$this->middleware('auth:api');
-		$this->middleware('role:user');
+		$this->middleware('auth:api', ['except' => ['showEvents']]);
+		$this->middleware('role:user', ['except' => ['showEvents']]);
 	}
 
 	public function showEvents(Request $request,  $id)
