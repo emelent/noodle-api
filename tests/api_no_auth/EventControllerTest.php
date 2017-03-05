@@ -24,4 +24,20 @@ class EventControllerTest extends NoAuthModelControllerTestCase
   {
     $this->canNotShowModelById();
   }
+
+  
+  public function testCanNotUpdateEvent()
+  {
+    $this->canNotUpdateModel();
+  }
+
+  public function testCanNotDeleteEvent()
+  {
+    $this->canNotDeleteModel();
+  }
+
+  public function testCanNotCreateNewEvent()
+  {
+    $this->canNotCreateNewModel();
+  }
 }

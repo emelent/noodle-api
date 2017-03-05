@@ -22,4 +22,19 @@ class ModuleControllerTest extends NoAuthModelControllerTestCase
   {
     $this->canShowModelById();
   }
+
+  public function testCanNotUpdateModule()
+  {
+    $this->canNotUpdateModel();
+  }
+
+  public function testCanNotDeleteModule()
+  {
+    $this->canNotDeleteModel();
+  }
+
+  public function testCanNotCreateNewModule()
+  {
+    $this->canNotCreateNewModel();
+  }
 }

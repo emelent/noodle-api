@@ -22,4 +22,15 @@ class TimetableControllerTest extends NoAuthModelControllerTestCase
   {
     $this->canShowModelById();
   }
+
+
+  public function testCanNotDeleteTimetable()
+  {
+    $this->canNotDeleteModel();
+  }
+
+  public function testCanNotCreateNewTimetable()
+  {
+    $this->canNotCreateNewModel();
+  }
 }
