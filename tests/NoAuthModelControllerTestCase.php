@@ -63,20 +63,20 @@ class NoAuthModelControllerTestCase extends TestCase
       ->seeStatusCode(self::HTTP_UNAUTHORIZED);
   }
 
-	public function testCanNotCreateNewModel()
+	public function canNotCreateNewModel()
 	{
 		$this->requestHack();
 		$this->post("{$this->modelRoutePrefix}/")
 			->seeStatusCode(self::HTTP_UNAUTHORIZED);
 	}
-	public function testCanNotUpdateExistingModel()
+	public function canNotUpdateModel()
 	{
 		// $this->requestHack();
 		$response = $this->put("{$this->modelRoutePrefix}/1/")
       ->seeStatusCode(self::HTTP_UNAUTHORIZED);
 	}
 	
-	public function testCanNotDeleteModel()
+	public function canNotDeleteModel()
 	{
 		$this->requestHack();
 		$this->delete("{$this->modelRoutePrefix}/1/")
