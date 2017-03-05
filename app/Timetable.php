@@ -42,9 +42,15 @@ class Timetable extends Model
     { 
       $eventIds = [];
       $events= $this->events()->get()->sortBy('id');
+      $moduleIds = [];
       foreach($events as $event){
         array_push($eventIds, $event->id);
+        array_push($moduleIds, $event->module_id);
       }
+      asort($moduleIds);
+
       $this->hash = implode('#', $eventIds);
+      $this->moduleDna = implode('#', $moduleIds);
+      $this->save();
     }
 }
