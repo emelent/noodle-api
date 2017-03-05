@@ -7,12 +7,8 @@ use App\Timetable;
 class TimetableControllerTest extends NoAuthModelControllerTestCase
 {
 
-  protected $modelRoutePrefix = '/v1/timetables';
-  protected $modelFields = [
-    'id', 'hash', 'creator_id',
-    'created_at', 'updated_at'
-  ];
-
+  protected $modelRoutePrefix = TIMETABLES_ROUTE;
+  protected $modelFields = TIMETABLE_FIELDS;
   public function testCanShowAllTimetables()
   {
     $this->canShowAllModels();

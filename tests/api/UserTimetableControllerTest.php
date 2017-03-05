@@ -5,10 +5,6 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 
 use App\User;
 
-const TIMETABLE_FIELDS = [
-  'id', 'hash', 'creator_id',
-  'created_at', 'updated_at',
-];
 
 class UserTimetableRoutesTest extends TestCase
 {
@@ -38,7 +34,7 @@ class UserTimetableRoutesTest extends TestCase
     //adding them again
     $user->timetables()->detach($timetables);
     $this->actingAs($user)
-      ->post("/v1/users/{$user->id}/timetables", [
+      ->post(USERS_ROUTE . "/{$user->id}/timetables", [
       'timetables'  => $timetablesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -74,7 +70,7 @@ class UserTimetableRoutesTest extends TestCase
     $timetablesArr = $timetables->toArray();
     $timetablesJson = json_encode($timetablesArr);
     $numTimetables = count($timetablesArr);
-    $this->actingAs($user)->delete("/v1/users/{$user->id}/timetables", [
+    $this->actingAs($user)->delete(USERS_ROUTE . "/{$user->id}/timetables", [
       'timetables'  =>  $timetablesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -103,7 +99,7 @@ class UserTimetableRoutesTest extends TestCase
     $user = $this->getUser();
     if($user->timetables()->get()->count() > 0){
       $this->actingAs($user)
-        ->get("/v1/users/{$user->id}/timetables")
+        ->get(USERS_ROUTE . "/{$user->id}/timetables")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [

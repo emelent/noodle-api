@@ -6,12 +6,6 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Timetable;
 use App\User;
 
-const EVENT_FIELDS = [
-  'name', 'day', 'start', 'end',
-  'date', 'language', 'group',
-  'creator_id', 'module_id', 'created_at',
-  'updated_at'
-];
 
 class TimetableEventRoutesTest extends TestCase
 {
@@ -44,7 +38,7 @@ class TimetableEventRoutesTest extends TestCase
     $eventsJson = json_encode($events);
 
     $this->actingAs($user)
-      ->post("/v1/timetables/{$timetable->id}/events", [
+      ->post(TIMETABLES_ROUTE . "/{$timetable->id}/events", [
       'events'  => $eventsJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -82,7 +76,7 @@ class TimetableEventRoutesTest extends TestCase
     $eventsJson = json_encode($eventsArr);
     $numEvents = count($eventsArr);
     $this->actingAs($user)
-    ->delete("/v1/timetables/$id/events", [
+    ->delete(TIMETABLES_ROUTE . "/$id/events", [
       'events'  =>  $eventsJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -113,7 +107,7 @@ class TimetableEventRoutesTest extends TestCase
     $timetable = Timetable::findOrFail($id);
     if($timetable->events()->count() > 0){
       $this->actingAs(User::findOrFail($timetable->creator_id))
-        ->get("/v1/timetables/$id/events")
+        ->get(TIMETABLES_ROUTE . "/$id/events")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [

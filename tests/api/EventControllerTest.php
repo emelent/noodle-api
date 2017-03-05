@@ -19,13 +19,8 @@ class EventControllerTest extends ModelControllerTestCase
 
   protected $tableName = 'events';
   protected $modelClass = Event::class;
-  protected $modelRoutePrefix = '/v1/events';
-  protected $modelFields = [
-    'name', 'day', 'start', 'end',
-    'date', 'language', 'group',
-    'creator_id', 'module_id', 'created_at',
-    'updated_at'
-  ];
+  protected $modelRoutePrefix = EVENTS_ROUTE;
+  protected $modelFields = EVENT_FIELDS;
 
 
   /**

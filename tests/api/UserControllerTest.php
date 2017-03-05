@@ -23,7 +23,7 @@ class UserControllerTest extends TestCase
    * @return void
    */
   public function testCanShowAllUsersWhenAdminUser(){
-    $this->actingAs(User::findOrFail(1))->get('/v1/users/')
+    $this->actingAs(User::findOrFail(1))->get(USERS_ROUTE)
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -42,7 +42,7 @@ class UserControllerTest extends TestCase
    * @return void
    */
   public function testDoesNotShowAllUsersWhenNotAnAdminUser(){
-    $this->actingAs(User::findOrFail(2))->get('/v1/users/')
+    $this->actingAs(User::findOrFail(2))->get(USERS_ROUTE)
       ->seeStatusCode(self::HTTP_FORBIDDEN);
   }
 
@@ -53,7 +53,7 @@ class UserControllerTest extends TestCase
    * @return void
    */
   public function testDoesNotShowAllUsersWhenNotAuthenticated(){
-    $this->get('/v1/users/')
+    $this->get(USERS_ROUTE)
       ->seeStatusCode(self::HTTP_UNAUTHORIZED);
   }
 
@@ -68,7 +68,7 @@ class UserControllerTest extends TestCase
   public function testCanShowUserWhenAuthenticated(){
     $id = 2;
     
-    $this->actingAs(User::findOrFail($id))->get("/v1/users/5/")
+    $this->actingAs(User::findOrFail($id))->get(USERS_ROUTE . '/5/')
       ->seeStatusCode(self::HTTP_OK)
       ->seeJsonStructure([
         'data'  => [
@@ -88,7 +88,7 @@ class UserControllerTest extends TestCase
    * @return void
    */
   public function testDoesNotShowUserWhenNotAuthenticated(){
-    $this->get('/v1/users/1/')
+    $this->get(USERS_ROUTE . '/1/')
       ->seeStatusCode(self::HTTP_UNAUTHORIZED);
   }
 
@@ -102,7 +102,7 @@ class UserControllerTest extends TestCase
    */
   public function testDoesNotShowUserWithAnInvalidId(){
     $invalidUserId = 'invalid';
-    $this->actingAs(User::findOrFail(1))->get("/v1/users/$invalidUserId/")
+    $this->actingAs(User::findOrFail(1))->get(USERS_ROUTE . "/$invalidUserId/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
   /**
@@ -120,7 +120,7 @@ class UserControllerTest extends TestCase
     $password = 'password99';
 
 
-    $this->post('/v1/users/', [
+    $this->post(USERS_ROUTE, [
       'email' => $email,
       'password' => $password
     ])->seeStatusCode(self::HTTP_CREATED)
@@ -147,7 +147,7 @@ class UserControllerTest extends TestCase
     $password = 'password99';
 
     //check that the api responds accordingly
-    $this->post('/v1/users/', [
+    $this->post(USERS_ROUTE, [
       'email' => $email, 'password' => $password
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
@@ -173,7 +173,7 @@ class UserControllerTest extends TestCase
     $password = 'password99';
 
     //check that the api responds accordingly
-    $this->post('/v1/users/', [
+    $this->post(USERS_ROUTE, [
       'password' => $password
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
@@ -195,7 +195,7 @@ class UserControllerTest extends TestCase
     $email = 'doma@gmail.com';
 
     //check that the api responds accordingly
-    $this->post('/v1/users/', [
+    $this->post(USERS_ROUTE, [
       'email' => $email
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
@@ -216,7 +216,7 @@ class UserControllerTest extends TestCase
     $email = 'doma@gmail.com';
 
     //check that the api responds accordingly
-    $this->post('/v1/users/')->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
+    $this->post(USERS_ROUTE)->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
       ->seeJson([
         'email' => [MSG_EMAIL_REQUIRED],
         'password' => [MSG_PASSWORD_REQUIRED],
@@ -236,7 +236,7 @@ class UserControllerTest extends TestCase
     $password= 'short';
 
     //check that the api responds accordingly
-    $this->post('/v1/users/', [
+    $this->post(USERS_ROUTE, [
       'email' => $email,
       'password' => $password,
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
@@ -258,7 +258,7 @@ class UserControllerTest extends TestCase
     $password= 'short';
 
     //check that the api responds accordingly
-    $this->post('/v1/users/', [
+    $this->post(USERS_ROUTE, [
       'email' => $email,
       'password' => $password,
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
@@ -280,12 +280,13 @@ class UserControllerTest extends TestCase
    */
   public function testCanUpdateExistingUserWithValidData(){
     $this->get('/');
-    $user = User::findOrFail(1);
+    $id = 1;
+    $user = User::findOrFail($id);
     $email = 'mynewemail@extranew.com';
 
     $this->assertNotEquals($email, $user->email);
     //check that the api responds accordingly
-    $this->actingAs($user)->put('/v1/users/1/', [
+    $this->actingAs($user)->put(USERS_ROUTE . "/$id/", [
       'email' => $email,
       'password' => 'newPassword'
     ])->seeStatusCode(self::HTTP_OK)
@@ -307,14 +308,15 @@ class UserControllerTest extends TestCase
    */
   public function testDoesNotUpdateExistingUserWithInvalidData(){
     $this->get('/');
-    $user = User::findOrFail(1);
+    $id = 1;
+    $user = User::findOrFail($id);
     $invalidEmail = 'invalid';
 
     //make sure test email and current email aren't the same
     $this->assertNotEquals($invalidEmail, $user->email);
 
     //check that the api responds accordingly
-    $this->actingAs(User::findOrFail(1))->put('/v1/users/1/', [
+    $this->actingAs($user)->put(USERS_ROUTE . "/$id/", [
       'email' => $invalidEmail,
       'password' => 'short'
     ])->seeStatusCode(self::HTTP_UNPROCESSABLE_ENTITY)
@@ -341,7 +343,7 @@ class UserControllerTest extends TestCase
     $invalidUserId = 'invalid';
 
     //check that the api responds accordingly
-    $this->actingAs(User::findOrFail(1))->put("/v1/users/$invalidUserId/", [
+    $this->actingAs(User::findOrFail(1))->put(USERS_ROUTE . "/$invalidUserId/", [
       'email' => 'new email',
     ])->seeStatusCode(self::HTTP_NOT_FOUND);
   }
@@ -357,7 +359,7 @@ class UserControllerTest extends TestCase
   public function testCanDeleteUser(){
     $that = $this;
     $id = 1;
-    $that->actingAs(User::findOrFail(1))->delete("/v1/users/$id/")
+    $that->actingAs(User::findOrFail($id))->delete(USERS_ROUTE . "/$id/")
       ->seeStatusCode(self::HTTP_OK);
 
     $this->missingFromDatabase('users', ['id' => $id]);
@@ -374,7 +376,7 @@ class UserControllerTest extends TestCase
   public function testDoesNotDeleteInvalidUser(){
     $that = $this;
     $id = 'invalid';
-    $that->actingAs(User::findOrFail(1))->delete("/v1/users/$id/")
+    $that->actingAs(User::findOrFail(1))->delete(USERS_ROUTE . "/$id/")
       ->seeStatusCode(self::HTTP_NOT_FOUND);
   }
 

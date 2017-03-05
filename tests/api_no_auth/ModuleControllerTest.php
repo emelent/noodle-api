@@ -7,11 +7,8 @@ use App\Module;
 class ModuleControllerTest extends NoAuthModelControllerTestCase
 {
 
-  protected $modelRoutePrefix = '/v1/modules';
-  protected $modelFields = [
-    'name', 'description', 'code',
-    'postgrad', 'period'
-  ];
+  protected $modelRoutePrefix = MODULES_ROUTE;
+  protected $modelFields = MODULE_FIELDS;
 
   public function testCanShowAllModules()
   {

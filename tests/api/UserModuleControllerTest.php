@@ -10,10 +10,6 @@ class UserModuleRoutesTest extends TestCase
 {
   use DatabaseTransactions;
 
-  const MODULE_FIELDS = [
-    'name', 'description', 'code',
-    'postgrad', 'period', 'id'
-  ];
   /**
    * I send a POST request to /v1/users/{id}/modules/ where
    * id is a valid user id with the parameter 'modules' 
@@ -37,7 +33,7 @@ class UserModuleRoutesTest extends TestCase
     $user->modules()->detach($modules);
 
     $this->actingAs($user)
-      ->post("/v1/users/{$user->id}/modules", [
+      ->post(USERS_ROUTE . "/{$user->id}/modules", [
       'modules'  => $modulesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -75,7 +71,7 @@ class UserModuleRoutesTest extends TestCase
     $modulesJson = json_encode($modulesArr);
     $numModules = count($modulesArr);
 
-    $this->actingAs($user)->delete("/v1/users/$id/modules", [
+    $this->actingAs($user)->delete(USERS_ROUTE . "/$id/modules", [
       'modules'  =>  $modulesJson
     ])->seeStatusCode(self::HTTP_OK)
       ->seeJson([
@@ -105,11 +101,11 @@ class UserModuleRoutesTest extends TestCase
     $id = 1;
     $user = User::findOrFail($id);
     if($user->modules()->count() > 0){
-      $this->actingAs($user)->get("/v1/users/$id/modules")
+      $this->actingAs($user)->get(USERS_ROUTE . "/$id/modules")
         ->seeStatusCode(self::HTTP_OK)
         ->seeJsonStructure([
           'data'  => [
-            '*' => self::MODULE_FIELDS 
+            '*' => MODULE_FIELDS 
           ]
         ]);
     }

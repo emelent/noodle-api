@@ -4,10 +4,6 @@ use Laravel\Lumen\Testing\DatabaseMigrations;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Module;
 
-const MODULE_FIELDS = [
-  'id', 'code','description', 
-  'name', 'postgrad', 'period'
-];
 
 const MSG_CODE_REQUIRED = '';
 const MSG_POSTGRAD_REQUIRED = '';
@@ -20,11 +16,8 @@ class ModuleControllerTest extends ModelControllerTestCase
 
   protected $tableName = 'modules';
   protected $modelClass = Module::class;
-  protected $modelRoutePrefix = '/v1/modules';
-  protected $modelFields = [
-    'id', 'code','description', 
-    'name', 'postgrad', 'period'
-  ];
+  protected $modelRoutePrefix = MODULES_ROUTE;
+  protected $modelFields = MODULE_FIELDS;
 
   /**
    * I send a POST request to /v1/modules/ with valid
