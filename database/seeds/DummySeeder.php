@@ -126,11 +126,13 @@ class DummySeeder extends Seeder
     });
 
     //create tables
-    factory(Timetable::class, NUM_TABLES)->create()->each(function($t){
+    factory(Timetable::class, NUM_TABLES)->create()->each(function($timetable){
       $numSelectedEvents = rand(1, NUM_EVENTS);
       $numSelectedUsers = rand(0, NUM_USERS);
 
       $availableEvents  = [];
+      $events = [];
+      $modules = [];
       for($i=0; $i < NUM_EVENTS; $i++)
         array_push($availableEvents, $i + 1);
     
@@ -139,13 +141,24 @@ class DummySeeder extends Seeder
         $index = rand(0, count($availableEvents) -1);
         DB::table('timetable_events')->insert([
           'event_id' =>  $availableEvents[$index],
-          'timetable_id' => $t->id
+          'timetable_id' => $timetable->id
         ]);
 
+        $event = Event::findOrFail($availableEvents[$index]);
+        array_push($events, $event->id);
+        array_push($modules, $event->module_id);
         // unset($availableEvents[$index]);
         array_splice($availableEvents, $index, 1);
       }
 
+      //generate timetable hash and moduleDna
+      asort($events);
+      $modules = array_unique($modules);
+      asort($modules);
+
+      $timetable->hash = implode('#', $events);
+      $timetable->moduleDna = implode('#', $modules);
+      $timetable->save();
       //add random users of timetable
       $availableUsers = [];
       for($i=0; $i < NUM_EVENTS; $i++)
@@ -154,7 +167,7 @@ class DummySeeder extends Seeder
       for($i=0; $i < $numSelectedUsers; $i++){
         $index = rand(0, count($availableUsers) -1);
         DB::table('user_timetables')->insert([
-          'timetable_id' => $t->id,
+          'timetable_id' => $timetable->id,
           'user_id' => $availableUsers[$index]
         ]);
 
