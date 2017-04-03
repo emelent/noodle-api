@@ -13,7 +13,8 @@
         "flow/jsonpath": "^0.3.4",
         "kujira/phpunit-printer": "1.0.1",
         "limedeck/phpunit-detailed-printer": "^1.2",
-        "tymon/jwt-auth": "1.0.0-beta.2"
+        "tymon/jwt-auth": "1.0.0-beta.2",
+        "barryvdh/laravel-cors": "^0.9.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
