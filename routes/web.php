@@ -20,6 +20,7 @@ $app->group([
   'prefix'  =>  '/v1/',
 ], function() use ($app){
   $app->post('/auth/login', 'AuthController@issueToken');
+  $app->get('/auth/refresh', 'AuthController@refreshToken');
   $app->get('/', function() use($app){
     return response()->json(['data' => "Looks like you're well ReSted"]);
   });
