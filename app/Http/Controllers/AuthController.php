@@ -39,10 +39,6 @@ class AuthController extends Controller
       return response()->json(['error' => 'Missing token.'], self::HTTP_BAD_REQUEST);
       // return response()->json(['token_absent' => $e->getMessage()],  self::HTTP_BAD_REQUEST);
     }
-    $data = [
-      'uid' => \App\User::where('email', $request->input('email'))->first()->id,
-      'token' => $token
-    ];
-    return response()->json($data);
+    return response()->json(compact('token'), self::HTTP_OK);
   }
 }
