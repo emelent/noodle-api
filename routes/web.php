@@ -28,18 +28,18 @@ $app->group([
   $app->group([
     'prefix' => '/user/'
   ], function() use ($app){
-    $app->get('/', 'SingleUserController@showUser');
-    $app->put('/', 'SingleUserController@updateUser');
+    $app->get('/', 'CurrentUserController@showUser');
+    $app->put('/', 'CurrentUserController@updateUser');
 
-    $app->get('/modules/', 'SingleUserController@showModules');
-    $app->put('/modules/', 'SingleUserController@updateModules');
-    $app->post('/modules', 'SingleUserController@addModules');
-    $app->delete('/modules', 'SingleUserController@removeModules');
+    $app->get('/modules/', 'CurrentUserController@showModules');
+    $app->put('/modules/', 'CurrentUserController@updateModules');
+    $app->post('/modules', 'CurrentUserController@addModules');
+    $app->delete('/modules', 'CurrentUserController@removeModules');
 
-    $app->get('/timetables/', 'SingleUserController@showTimetables');
-    $app->delete('/timetables/', 'SingleUserController@removeTimetables');
-    $app->post('/timetables/', 'SingleUserController@addTimetable');
-    $app->put('/timetables/{id}/', 'SingleUserController@updateTimetable');
+    $app->get('/timetables/', 'CurrentUserController@showTimetables');
+    $app->delete('/timetables/', 'CurrentUserController@removeTimetables');
+    $app->post('/timetables/', 'CurrentUserController@addTimetable');
+    $app->put('/timetables/{id}/', 'CurrentUserController@updateTimetable');
   });
 
   /*users routes*/

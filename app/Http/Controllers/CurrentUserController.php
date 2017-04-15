@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 /**
 * 
 */
-class SingleUserController extends Controller
+class CurrentUserController extends Controller
 {
 
 	function __construct()
