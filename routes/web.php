@@ -22,11 +22,27 @@ $app->group([
   $app->post('/auth/login', 'AuthController@issueToken');
   $app->get('/auth/refresh', 'AuthController@refreshToken');
   $app->get('/', function() use($app){
-    return response()->json(['data' => "Looks like you're well ReSted"]);
+    return response()->json("Looks like you're well ReSted");
   });
 
+  $app->group([
+    'prefix' => '/user/'
+  ], function() use ($app){
+    $app->get('/', 'SingleUserController@showUser');
+    $app->put('/', 'SingleUserController@updateUser');
 
-  /*user routes*/
+    $app->get('/modules/', 'SingleUserController@showModules');
+    $app->put('/modules/', 'SingleUserController@updateModules');
+    $app->post('/modules', 'SingleUserController@addModules');
+    $app->delete('/modules', 'SingleUserController@removeModules');
+
+    $app->get('/timetables/', 'SingleUserController@showTimetables');
+    $app->delete('/timetables/', 'SingleUserController@removeTimetables');
+    $app->post('/timetables/', 'SingleUserController@addTimetable');
+    $app->put('/timetables/{id}/', 'SingleUserController@updateTimetable');
+  });
+
+  /*users routes*/
   $app->group([
     'prefix'  =>  'users/',
   ], function() use ($app){
