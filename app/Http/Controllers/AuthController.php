@@ -20,6 +20,7 @@ class AuthController extends Controller
   {
     $this->jwt = $jwt;
     $this->manager = $manager;
+		$this->middleware('auth:api', ['only' => ['refreshToken']]);
   }
 
   public function issueToken(Request $request)
